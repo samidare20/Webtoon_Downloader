@@ -2,16 +2,12 @@ package com.example.webtoon_downloader;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-
-import java.io.File;
-import java.io.FileWriter;
 
 public class MainActivity extends AppCompatActivity {
     String mainURL="https://comic.naver.com/webtoon/weekday.nhn";
