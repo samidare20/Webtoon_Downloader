@@ -25,7 +25,7 @@ class itemList{//표지 이미지, 웹툰 이름 저장하는 클래스
 }
 
 class linkControl {
-    var ElementList=ArrayList<itemList>();
+    var ElementList=ArrayList<itemList>()
 
     fun sethtml(text:String){
         var itemlist=itemList()
