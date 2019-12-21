@@ -24,10 +24,10 @@ class itemList{//표지 이미지, 웹툰 이름 저장하는 클래스
     }
 }
 
-class linkControl {
+class linkControl{
     var ElementList=ArrayList<itemList>()
 
-    fun sethtml(text:String){
+    fun sethtml(text:String):ArrayList<itemList>{
         var itemlist=itemList()
         var a= text.split("<li>")
         for(i in a){
@@ -36,5 +36,6 @@ class linkControl {
                 ElementList.add(itemlist)
             }
         }
+        return ElementList
     }
 }
