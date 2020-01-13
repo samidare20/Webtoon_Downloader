@@ -1,18 +1,15 @@
 package com.example.webtoon_downloader;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.widget.TabHost;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
-import java.util.ArrayList;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
     String mainURL="https://comic.naver.com/webtoon/weekday.nhn";
@@ -22,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        makePermission();
         mcontext=this;
         setContentView(R.layout.activity_main);
         ////tabhost 세팅
@@ -63,7 +61,14 @@ public class MainActivity extends AppCompatActivity {
 
         host.addTab(sonspec);
 
-        ArrayList<itemList> a= new ArrayList<>();
+        new Thread(){
+        public void run(){
+            new Download("https://comic.naver.com/webtoon/detail.nhn?titleId=736277&no=9&weekday=sun");
+
+        }}.start();
+
+    }
+ /*       ArrayList<itemList> a= new ArrayList<>();
         new  Thread() {
             public void run()  {
                 try {
@@ -84,5 +89,10 @@ public class MainActivity extends AppCompatActivity {
    Handler handler=new Handler(msg -> {
        linkControl.getElementList().size();
        return true;
-   });
+   });*/
+         private void makePermission(){
+             if(Build.VERSION.SDK_INT>22){
+                 requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+             }
+    }
 }
