@@ -11,8 +11,6 @@ import java.net.URL
 
 
 class Download(link:String) {
-    var images = ArrayList<String>()
-
     init {
         Thread()
         Log.d("mydebug", "check")
