@@ -4,6 +4,7 @@ class itemList{//표지 이미지, 웹툰 이름 저장하는 클래스
     var title=""//이름
     var imagesrc=""//표지 이미지 링크
     var day=""//요일
+
     fun getElement(html:String){
         title=html.substring(html.indexOf("title=")+7)//제목 알아냄
         title=title.substring(0,title.indexOf("\""))

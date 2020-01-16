@@ -1,15 +1,21 @@
 package com.example.webtoon_downloader;
 
 import android.Manifest;
+import android.content.ClipData;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.widget.TabHost;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     String mainURL="https://comic.naver.com/webtoon/weekday.nhn";
@@ -60,15 +66,7 @@ public class MainActivity extends AppCompatActivity {
         sonspec.setIndicator("일");
 
         host.addTab(sonspec);
-
-        new Thread(){
-        public void run(){
-            new Download("https://comic.naver.com/webtoon/detail.nhn?titleId=736277&no=9&weekday=sun");
-
-        }}.start();
-
-    }
- /*       ArrayList<itemList> a= new ArrayList<>();
+        ArrayList<itemList> a= new ArrayList<>();
         new  Thread() {
             public void run()  {
                 try {
@@ -85,14 +83,21 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start();
         Log.d("mydebug","func end");
+        //Log.d("mydebug",urltest);
+        //test.setThumbnail();
+
+
     }
-   Handler handler=new Handler(msg -> {
-       linkControl.getElementList().size();
-       return true;
-   });*/
-         private void makePermission(){
-             if(Build.VERSION.SDK_INT>22){
-                 requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-             }
+    Handler handler=new Handler(msg -> {
+        WebtoonTiles test=findViewById(R.id.test);
+        itemList urltest=linkControl.getElementList().get(1);
+        test.setThumbnail(urltest.getTitle(),urltest.getImagesrc());
+        return true;
+    });
+
+    private void makePermission(){
+         if(Build.VERSION.SDK_INT>22){
+             requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+         }
     }
 }
