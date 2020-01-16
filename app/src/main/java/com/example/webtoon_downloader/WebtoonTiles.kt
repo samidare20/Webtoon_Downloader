@@ -16,7 +16,7 @@ class WebtoonTiles @JvmOverloads constructor(
     var URL=""
     init{
         LayoutInflater.from(context).inflate(R.layout.webtoon_tiles,this,true)
-        this.setOnClickListener({
+        this.setOnClickListener({  
             Log.d("mydebug","check")
         })
     }
