@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.TabHost;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -88,12 +90,26 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    Handler handler=new Handler(msg -> {
-        WebtoonTiles test=findViewById(R.id.test);
-        itemList urltest=linkControl.getElementList().get(1);
-        test.setThumbnail(urltest.getTitle(),urltest.getImagesrc());
+    Handler handler=new Handler(msg -> {//타일 설정
+        TableLayout a=findViewById(R.id.MontabContent);
+        int index=1;
+        int size=linkControl.getElementList().size();
+        while(size-index>=3&&index<=20)
+        {
+            TableRow row=new TableRow(this);
+            for(int many=0;index<size&&many<3;index++,many++)
+            {
+                itemList nowitem=linkControl.getElementList().get(index);
+                WebtoonTiles tile=new WebtoonTiles(this,null,0);
+                tile.setThumbnail(nowitem.getTitle(),nowitem.getImagesrc());
+                Log.d("mydebug",nowitem.getTitle());
+            }
+            a.addView(row);
+        }
+
         return true;
     });
+
 
     private void makePermission(){
          if(Build.VERSION.SDK_INT>22){
