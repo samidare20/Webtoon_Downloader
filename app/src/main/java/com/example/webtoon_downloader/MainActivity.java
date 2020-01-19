@@ -3,10 +3,13 @@ package com.example.webtoon_downloader;
 import android.Manifest;
 import android.content.ClipData;
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Display;
+import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -24,12 +27,21 @@ public class MainActivity extends AppCompatActivity {
     public linkControl linkControl=new linkControl();
     public Context mcontext;
 
+
+    Point displaySize = new Point();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         makePermission();
+        Display display = getWindowManager().getDefaultDisplay();
+        display.getSize(displaySize);
+
+
         mcontext=this;
         setContentView(R.layout.activity_main);
+
         ////tabhost 세팅
         TabHost host= findViewById(R.id.host);
         host.setup();
@@ -84,27 +96,27 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }.start();
-        Log.d("mydebug","func end");
         //Log.d("mydebug",urltest);
         //test.setThumbnail();
 
 
     }
     Handler handler=new Handler(msg -> {//타일 설정
-        TableLayout a=findViewById(R.id.MontabContent);
+        LinearLayout layout=findViewById(R.id.MontabContent);
+        /*TableRow row=new TableRow(this);
+        WebtoonTiles tile=new WebtoonTiles(this,null,0);
+        itemList list=linkControl.getElementList().get(1);
+        tile.setThumbnail(list.getTitle(),list.getImagesrc());
+        row.addView(tile);
+        a.addView(row);*/
         int index=1;
-        int size=linkControl.getElementList().size();
-        while(size-index>=3&&index<=20)
+        while(index<20)
         {
-            TableRow row=new TableRow(this);
-            for(int many=0;index<size&&many<3;index++,many++)
-            {
-                itemList nowitem=linkControl.getElementList().get(index);
-                WebtoonTiles tile=new WebtoonTiles(this,null,0);
-                tile.setThumbnail(nowitem.getTitle(),nowitem.getImagesrc());
-                Log.d("mydebug",nowitem.getTitle());
-            }
-            a.addView(row);
+            itemList list=linkControl.getElementList().get(index);
+            WebtoonTiles tile=new WebtoonTiles(this,null,0);
+            tile.setThumbnail(list.getTitle(),list.getImagesrc());
+            layout.addView(tile);
+            index++;
         }
 
         return true;
