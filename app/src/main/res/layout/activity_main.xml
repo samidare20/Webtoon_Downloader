@@ -21,61 +21,59 @@
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-                <TableLayout
-                    android:id="@+id/MontabContent"
+                android:layout_height="wrap_content">
+                <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:stretchColumns="*">
-                    <TableRow>
-                        <com.example.webtoon_downloader.WebtoonTiles
-                            android:id="@+id/test"/>
-                        <com.example.webtoon_downloader.WebtoonTiles/>
-                        <com.example.webtoon_downloader.WebtoonTiles/>
-                    </TableRow>
-            </TableLayout>
-                <TableLayout
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:id="@+id/MontabContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                    </LinearLayout>
+                </ScrollView>
+                <LinearLayout
                     android:id="@+id/TuetabContent"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                </LinearLayout>
 
-                </TableLayout>
-
-                <TableLayout
+                <LinearLayout
                     android:id="@+id/WedtabContent"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                </LinearLayout>
 
-                </TableLayout>
-
-                <TableLayout
+                <LinearLayout
                     android:id="@+id/ThutabContent"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                </LinearLayout>
 
-                </TableLayout>
-
-                <TableLayout
+                <LinearLayout
                     android:id="@+id/FritabContent"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                </LinearLayout>
 
-                </TableLayout>
-
-                <TableLayout
+                <LinearLayout
                     android:id="@+id/SattabContent"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                </LinearLayout>
 
-                </TableLayout>
-
-                <TableLayout
+                <LinearLayout
                     android:id="@+id/SuntabContent"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                </LinearLayout>
 
-                </TableLayout>
             </FrameLayout>
         </LinearLayout>
     </TabHost>
