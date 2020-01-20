@@ -12,15 +12,17 @@ class WebtoonTiles @JvmOverloads constructor(
         context:Context,
         attrs:AttributeSet?=null,
         defStyleAttr:Int=0
-) : LinearLayout(context,attrs,defStyleAttr){
-    var URL=""
-    init{
-        LayoutInflater.from(context).inflate(R.layout.webtoon_tiles,this,true)
-        this.setOnClickListener({  
-            Log.d("mydebug","check")
+) : LinearLayout(context,attrs,defStyleAttr) {
+    var URL = ""
+
+    init {
+        LayoutInflater.from(context).inflate(R.layout.webtoon_tiles, this, true)
+        this.setOnClickListener({
+            Log.d("mydebug", "check")
         })
     }
-    fun setThumbnail(title:String,link:String){
+
+    fun setThumbnail(title: String, link: String) {
         Glide.with(context).load(link).into(thumbnail)
         titlename.setText(title)
     }
