@@ -16,6 +16,5 @@
         android:layout_height="100dp"
         android:gravity="center_horizontal"
         android:text="TextView"
-        android:layout_weight="1"
         android:textSize="20sp" />
 </LinearLayout>

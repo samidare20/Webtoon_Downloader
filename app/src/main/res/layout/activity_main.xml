@@ -16,28 +16,31 @@
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
+                android:layout_height="wrap_content"
+                />
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <ScrollView
+
+                <LinearLayout
+                    android:id="@+id/MontabContent"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <LinearLayout
-                        android:id="@+id/MontabContent"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                    </LinearLayout>
-                </ScrollView>
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/TuetabContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:id="@+id/WedtabContent"
@@ -68,13 +71,15 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/SuntabContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                        android:id="@+id/SuntabContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
                 </LinearLayout>
 
             </FrameLayout>
+
+            </ScrollView>
         </LinearLayout>
     </TabHost>
 </LinearLayout>

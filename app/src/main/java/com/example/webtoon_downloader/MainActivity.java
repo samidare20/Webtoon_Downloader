@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         sonspec.setIndicator("일");
 
         host.addTab(sonspec);
-        ArrayList<itemList> a= new ArrayList<>();
+
         new  Thread() {
             public void run()  {
                 try {
@@ -96,27 +96,34 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }.start();
-        //Log.d("mydebug",urltest);
-        //test.setThumbnail();
 
 
     }
     Handler handler=new Handler(msg -> {//타일 설정
-        LinearLayout layout=findViewById(R.id.MontabContent);
-        /*TableRow row=new TableRow(this);
-        WebtoonTiles tile=new WebtoonTiles(this,null,0);
-        itemList list=linkControl.getElementList().get(1);
-        tile.setThumbnail(list.getTitle(),list.getImagesrc());
-        row.addView(tile);
-        a.addView(row);*/
+        String names[]=new String[]{"MontabContent","TuetabContent","WedtabContent","ThutabContent","FritabContent","SattabContent","SuntabContent"};
+        int nameindex=0;
         int index=1;
-        while(index<20)
+        String day="";
+        itemList list=new itemList();
+
+        while(index<linkControl.getElementList().size()&&nameindex<7)
         {
-            itemList list=linkControl.getElementList().get(index);
-            WebtoonTiles tile=new WebtoonTiles(this,null,0);
-            tile.setThumbnail(list.getTitle(),list.getImagesrc());
-            layout.addView(tile);
-            index++;
+            int id=getResources().getIdentifier(names[nameindex],"id",getPackageName());
+            nameindex++;
+            LinearLayout layout=findViewById(id);
+            list=linkControl.getElementList().get(index);
+            day=list.getDay();
+            while(day.equals(list.getDay()))
+            {
+                WebtoonTiles tile=new WebtoonTiles(this,null,0);
+                tile.setThumbnail(list.getTitle(),list.getImagesrc(),list.getComiclist());
+                layout.addView(tile);
+                tile.getLayoutParams().width=displaySize.x;
+                index++;
+                if(index>=linkControl.getElementList().size())
+                    break;
+                list=linkControl.getElementList().get(index);
+            }
         }
 
         return true;
