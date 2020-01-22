@@ -4,11 +4,65 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Episode">
+    tools:context=".Episode"
+    android:weightSum="1">
 
-    <Button
-        android:id="@+id/button"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="373dp"
-        android:text="Button" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_weight="0.8">
+
+
+        <ImageView
+            android:id="@+id/episode_thumbnail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:srcCompat="@tools:sample/avatars"
+            android:layout_margin="10dp"
+            android:layout_weight="0.5"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="0.5"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/episode_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="타이틀"
+                android:layout_weight="0.5"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                />
+            <TextView
+                android:id="@+id/episode_writer"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="작가"
+                android:layout_weight="0.5"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.3">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+        </LinearLayout>
+
+    </ScrollView>
 </LinearLayout>

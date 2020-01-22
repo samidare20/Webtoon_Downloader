@@ -19,6 +19,8 @@ class itemList{//표지 이미지, 웹툰 이름 저장하는 클래스
         html=html.substring(html.indexOf("href")+7)
         comiclist=html
         comiclist="https://comic.naver.com/"+comiclist.substring(0,comiclist.indexOf("\""))
+        comiclist=comiclist.substring(0,comiclist.indexOf("amp")-1)
+
 
         var index=html.indexOf("weekday")+7//요일 알아냄
         day=html.substring(index+1,index+4)
@@ -31,7 +33,13 @@ class linkControl{
 
     fun sethtml(text:String):ArrayList<itemList>{
         var a= text.split("<li>") //html을 <li>구분해서 분할(각 만화로 나누어짐)
+        var firstCheck=false
         for(i in a){
+            if(firstCheck==false)
+            {
+                firstCheck=true
+                continue
+            }
             if(!("src" in a)) {
                 var itemlist=itemList()//나눈 만화를 각각 itemlist에 넣어 저장
                 itemlist.getElement(i)
