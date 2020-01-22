@@ -1,26 +1,23 @@
 package com.example.webtoon_downloader;
 
 import android.Manifest;
-import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     String mainURL="https://comic.naver.com/webtoon/weekday.nhn";
@@ -119,6 +116,11 @@ public class MainActivity extends AppCompatActivity {
                 tile.setThumbnail(list.getTitle(),list.getImagesrc(),list.getComiclist());
                 layout.addView(tile);
                 tile.getLayoutParams().width=displaySize.x;
+                tile.setOnClickListener(v -> {
+                    Intent intent=new Intent(MainActivity.this,Episode.class);
+                    startActivity(intent);
+                });
+
                 index++;
                 if(index>=linkControl.getElementList().size())
                     break;
