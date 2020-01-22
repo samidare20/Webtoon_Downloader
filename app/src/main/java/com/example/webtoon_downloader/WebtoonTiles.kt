@@ -5,9 +5,10 @@ import android.content.Intent
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
+import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat.startActivity
-
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.webtoon_tiles.view.*
 
@@ -29,6 +30,11 @@ class WebtoonTiles @JvmOverloads constructor(
             Log.d("mydebug",e.toString())
             Log.d("mydebug",thumbnail.toString())
         }
+        this.setOnClickListener({ v: View? ->
+            val intent = Intent(context, Episode::class.java)
+            intent.putExtra()
+            startActivity(context,intent,null)
+        })
 
     }
 

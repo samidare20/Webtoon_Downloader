@@ -116,10 +116,6 @@ public class MainActivity extends AppCompatActivity {
                 tile.setThumbnail(list.getTitle(),list.getImagesrc(),list.getComiclist());
                 layout.addView(tile);
                 tile.getLayoutParams().width=displaySize.x;
-                tile.setOnClickListener(v -> {
-                    Intent intent=new Intent(MainActivity.this,Episode.class);
-                    startActivity(intent);
-                });
 
                 index++;
                 if(index>=linkControl.getElementList().size())
