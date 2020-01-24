@@ -22,10 +22,10 @@ class Episode : AppCompatActivity(){
         Glide.with(this).load(intent.getString("thumbnail")).into(episode_thumbnail)
         comic_title.setText(intent.getString("title"))
 
-        var handler= @SuppressLint("HandlerLeak")
+        val handler= @SuppressLint("HandlerLeak")
         object:Handler(){
             override fun handleMessage(msg: Message) {
-                var episode=episodeTiles(mcontext,null,0)
+                val episode=episodeTiles(mcontext,null,0)
                 var message=msg.obj.toString()
                 val title=message.substring(message.indexOf("-")+1)
                 message=message.substring(0,message.indexOf("-"))
@@ -35,9 +35,9 @@ class Episode : AppCompatActivity(){
             }
         }
         Thread(Runnable {
-            var doc=Jsoup.connect(intent.getString("link")).get()
-            var elements=doc.select("tbody").toString()
-            var html=elements.split("<tr>")
+            val doc=Jsoup.connect(intent.getString("link")).get()
+            val elements=doc.select("tbody").toString()
+            val html=elements.split("<tr>")
 
             var href:String
             var title:String
@@ -46,7 +46,8 @@ class Episode : AppCompatActivity(){
 
                 href="https://comic.naver.com"
                 try {
-                    href += i.substring(i.indexOf("href") + 6, i.indexOf("weekday") - 5)
+                    val amp=i.indexOf("&amp")
+                    href += i.substring(i.indexOf("href") + 6, amp)+"&"+i.substring(amp+5,i.indexOf("weekday")-5)
                     title=i.substring(i.indexOf("title=")+7)
                     title=title.substring(0,title.indexOf("\""))
                 }
