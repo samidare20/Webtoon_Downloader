@@ -14,7 +14,8 @@
         android:id="@+id/titlename"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:text="TextView"
+
         android:textSize="20sp" />
 </LinearLayout>

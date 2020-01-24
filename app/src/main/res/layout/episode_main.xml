@@ -31,7 +31,7 @@
             android:weightSum="1">
 
             <TextView
-                android:id="@+id/episode_title"
+                android:id="@+id/comic_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="타이틀"
@@ -55,9 +55,10 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.3">
+        android:layout_weight="0.2">
 
         <LinearLayout
+            android:id="@+id/episode_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >

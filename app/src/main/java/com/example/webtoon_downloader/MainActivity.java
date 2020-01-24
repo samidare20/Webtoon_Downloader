@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("mydebug",ex.toString());
                 }
                 handler.sendMessage(handler.obtainMessage());
-
             }
         }.start();
 
