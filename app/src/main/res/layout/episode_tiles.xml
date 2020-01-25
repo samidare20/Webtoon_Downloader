@@ -10,6 +10,12 @@
         android:layout_height="100dp"
         android:text="test"
         android:gravity="center"
-
         />
+
+    <View
+        android:background="@drawable/episode_border"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        />
+
 </LinearLayout>

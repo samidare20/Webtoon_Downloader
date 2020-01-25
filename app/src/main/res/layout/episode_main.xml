@@ -36,12 +36,16 @@
                 android:layout_height="match_parent"
                 android:text="타이틀"
                 android:layout_weight="0.5"
-                android:layout_marginBottom="10dp"
                 android:gravity="center"
                 />
+            <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            />
+
             <TextView
                 android:id="@+id/episode_writer"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -51,6 +55,11 @@
         </LinearLayout>
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/episode_border"
+        />
 
     <ScrollView
         android:layout_width="match_parent"
