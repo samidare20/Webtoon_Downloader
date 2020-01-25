@@ -10,12 +10,13 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 
-class Download(link:String,title:String) {
-    var path = Environment.getExternalStorageDirectory().absolutePath.toString() + "/download/"+title
+class Download(link:String,title:String,series:String) {
+    var path = Environment.getExternalStorageDirectory().absolutePath.toString() + "/download/"
 
 
     init {
         Log.d("mydebug", "check")
+        makefolder(title,series)
         try {
             val doc = Jsoup.connect(link).get()
             val element = doc.select("div.wt_viewer")
@@ -26,14 +27,26 @@ class Download(link:String,title:String) {
             Log.d("mydebug", ex.toString())
         }
     }
+    fun makefolder(title:String,series: String)
+    {
+        path+="Webtoon"
+        var folder=File(path)
+        if(folder.exists()==false)
+            folder.mkdir()
 
+        path+="/"+series
+        folder=File(path)
+        if(folder.exists()==false)
+            folder.mkdir()
+
+        path+="/"+title
+        folder=File(path)
+        if(folder.exists()==false)
+            folder.mkdir()
+    }
     fun download(html: List<String>) {
         var nowstring:String
         var index=1
-
-        val folder=File(path)
-        if(folder.exists()==false)
-            folder.mkdir()
         for (i in html) {
             if (i.indexOf("title") != -1) {
                 nowstring = i.substring(i.indexOf("src") + 5, i.indexOf("title")-2)

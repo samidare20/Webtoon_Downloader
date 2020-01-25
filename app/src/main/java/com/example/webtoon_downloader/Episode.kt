@@ -29,7 +29,7 @@ class Episode : AppCompatActivity(){
                 val title=message.substring(message.indexOf("-")+1)
                 message=message.substring(0,message.indexOf("-"))
 
-                episode.setTile(title,message)
+                episode.setTile(title,message,intent.getString("title")!!)
                 episode_area.addView(episode)
             }
         }
