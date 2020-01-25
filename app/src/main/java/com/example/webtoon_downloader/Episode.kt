@@ -18,7 +18,6 @@ class Episode : AppCompatActivity(){
 
         val mcontext=this
         val intent=getIntent().extras!!
-
         Glide.with(this).load(intent.getString("thumbnail")).into(episode_thumbnail)
         comic_title.setText(intent.getString("title"))
 
@@ -35,32 +34,48 @@ class Episode : AppCompatActivity(){
             }
         }
         Thread(Runnable {
-            val doc=Jsoup.connect(intent.getString("link")).get()
-            val elements=doc.select("tbody").toString()
-            val html=elements.split("<tr>")
+            val link=intent.getString("link")+"&page="
+            var prev=""
+            var page=1
+            while(true) {
 
-            var href:String
-            var title:String
-            for (i in html)
-            {
+                val doc = Jsoup.connect(link+page.toString()).get()
+                val elements = doc.select("tbody").toString()
+                val html = elements.split("<tr>")
+                var end=false
+                var first=false
+                var href: String
+                var title: String
+                for (i in html) {
 
-                href="https://comic.naver.com"
-                try {
-                    val amp=i.indexOf("&amp")
-                    href += i.substring(i.indexOf("href") + 6, amp)+"&"+i.substring(amp+5,i.indexOf("weekday")-5)
-                    title=i.substring(i.indexOf("title=")+7)
-                    title=title.substring(0,title.indexOf("\""))
+                    href = "https://comic.naver.com"
+                    try {
+                        val amp = i.indexOf("&amp")
+                        href += i.substring(i.indexOf("href") + 6, amp) + "&" + i.substring(amp + 5, i.indexOf("weekday") - 5)
+                        title = i.substring(i.indexOf("title=") + 7)
+                        title = title.substring(0, title.indexOf("\""))
+                        if (first==false) {
+                            if(prev.equals(title)==true)
+                            {
+                                end=true
+                                break
+                            }
+                            prev=title
+                            first=true
+                        }
+                    }
+                    catch (e: Exception) {
+                        continue
+                    }
+
+                    val message = Message.obtain()
+                    message.obj = href + "-" + title
+                    handler.sendMessage(message)
                 }
-                catch (e:Exception){
-                    continue
-                }
-
-                val message=Message.obtain()
-                message.obj=href+"-"+title
-                handler.sendMessage(message)
+                if(end==true)
+                    break
+                page++
             }
         }).start()
-
-
     }
 }
