@@ -4,18 +4,15 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.episode_main.*
 import org.jsoup.Jsoup
-import java.lang.Exception
 
 class Episode : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.episode_main)
-
         val mcontext=this
         val intent=getIntent().extras!!
         Glide.with(this).load(intent.getString("thumbnail")).into(episode_thumbnail)
@@ -78,4 +75,6 @@ class Episode : AppCompatActivity(){
             }
         }).start()
     }
+
+
 }

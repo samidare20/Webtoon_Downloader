@@ -1,7 +1,5 @@
 package com.example.webtoon_downloader
 
-import android.util.Log
-
 class itemList{//표지 이미지, 웹툰 이름 저장하는 클래스
     var title=""//이름
     var imagesrc=""//표지 이미지 링크

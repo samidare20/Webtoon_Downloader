@@ -1,15 +1,15 @@
 package com.example.webtoon_downloader;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         makePermission();
         Display display = getWindowManager().getDefaultDisplay();
         display.getSize(displaySize);
-
+        createNotificationChannel();
 
         mcontext=this;
         setContentView(R.layout.activity_main);
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         int nameindex=0;
         int index=1;
         String day="";
-        itemList list=new itemList();
+        itemList list;
 
         while(index<linkControl.getElementList().size()&&nameindex<7)
         {
@@ -131,5 +131,12 @@ public class MainActivity extends AppCompatActivity {
          if(Build.VERSION.SDK_INT>22){
              requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
          }
+    }
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel =new NotificationChannel("1004", "yee", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }
