@@ -14,13 +14,14 @@ public class restart extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-    @Override
-    public int onStartCommand(Intent intent,int flags,int startId){
-        NotificationCompat.Builder builder=new NotificationCompat.Builder(this,"1004");
-        builder.setSmallIcon(R.mipmap.ic_launcher);
-        startForeground(9,builder.build());
 
-        Intent in=new Intent(this,updateCheck.class);
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1004");
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        startForeground(9, builder.build());
+
+        Intent in = new Intent(this, updateCheck.class);
         startService(in);
         stopForeground(true);
         stopSelf();

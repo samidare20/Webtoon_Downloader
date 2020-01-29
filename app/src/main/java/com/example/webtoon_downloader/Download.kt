@@ -15,7 +15,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 
-class Download(link:String,title:String,series:String,context: Context) {
+class Download(link: String, title: String, series: String, context: Context) {
     private var path = Environment.getExternalStorageDirectory().absolutePath.toString() + "/download/"
     private val intent = Intent(context, MainActivity::class.java)
     private val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
@@ -63,7 +63,7 @@ class Download(link:String,title:String,series:String,context: Context) {
             if (i.indexOf("title") != -1)
                 nowstring.add(i.substring(i.indexOf("src") + 5, i.indexOf("title") - 2))
         }
-        val max = nowstring.size+1
+        val max = nowstring.size + 1
         var notiBuilder = NotificationCompat.Builder(context, "1004")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle("$title 다운로드 중...")
@@ -116,8 +116,8 @@ class Download(link:String,title:String,series:String,context: Context) {
         notiBuilder.setContentTitle(title)
         notiBuilder.setContentText(" 다운로드 완료")
         notiBuilder.setOngoing(false)
-        notiBuilder.setProgress(0,0,false)
-        notificationManager.notify(1,notiBuilder.build())
+        notiBuilder.setProgress(0, 0, false)
+        notificationManager.notify(1, notiBuilder.build())
     }
 
 

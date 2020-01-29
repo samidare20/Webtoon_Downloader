@@ -18,65 +18,69 @@ import java.util.TimerTask;
 public class updateCheck extends Service {
     public updateCheck() {
     }
-    public static Intent serviceIntent=null;
+
+    public static Intent serviceIntent = null;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
+
     @Override
-    public int onStartCommand(Intent intent,int flags,int startId){
-        NotificationCompat.Builder mbuild=new NotificationCompat.Builder(this,"1004")
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        NotificationCompat.Builder mbuild = new NotificationCompat.Builder(this, "1004")
                 .setContentTitle("check")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setOngoing(false);
 
 
-        NotificationManager manager=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        manager.notify(2,mbuild.build());
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        manager.notify(2, mbuild.build());
 
         final int[] index = {1};
-        TimerTask tt=new TimerTask(){
+        TimerTask tt = new TimerTask() {
             @Override
-            public void run(){
-                if(index[0]++>=10)
+            public void run() {
+                if (index[0]++ >= 10)
                     this.cancel();
-                Log.d("mydebug","check"+index[0]);
+                Log.d("mydebug", "check" + index[0]);
             }
         };
-        Timer timer=new Timer();
-        timer.schedule(tt,0,3000);
+        Timer timer = new Timer();
+        timer.schedule(tt, 0, 3000);
 
         return START_STICKY;
     }
+
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
 
-        final Calendar cal=Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(System.currentTimeMillis());
-        cal.add(Calendar.SECOND,1);
-        Intent intent=new Intent(this, AlarmReceiver.class);
-        PendingIntent sender=PendingIntent.getBroadcast(this,0,intent,0);
+        cal.add(Calendar.SECOND, 1);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, 0);
 
-        AlarmManager alarm=(AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarm.set(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),sender);
-        Log.d("mydebug","service end");
+        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarm.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+        Log.d("mydebug", "service end");
 
     }
 
     @Override
-    public void onTaskRemoved(Intent rootIntent){
+    public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
 
-        final Calendar cal=Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(System.currentTimeMillis());
-        cal.add(Calendar.SECOND,3);
-        Intent intent=new Intent(this, AlarmReceiver.class);
-        PendingIntent sender=PendingIntent.getBroadcast(this,0,intent,0);
+        cal.add(Calendar.SECOND, 3);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, 0);
 
-        AlarmManager alarm=(AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarm.set(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),sender);
-        Log.d("mydebug","service end");
+        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarm.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+        Log.d("mydebug", "service end");
     }
 
 

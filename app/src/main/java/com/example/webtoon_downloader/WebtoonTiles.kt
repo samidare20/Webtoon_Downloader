@@ -6,36 +6,34 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat.startActivity
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.webtoon_tiles.view.*
 
 class WebtoonTiles @JvmOverloads constructor(
-        context:Context,
-        attrs:AttributeSet?=null,
-        defStyleAttr:Int=0
-) : LinearLayout(context,attrs,defStyleAttr){
-    init{
-        LayoutInflater.from(context).inflate(R.layout.webtoon_tiles,this,true)
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0
+) : LinearLayout(context, attrs, defStyleAttr) {
+    init {
+        LayoutInflater.from(context).inflate(R.layout.webtoon_tiles, this, true)
     }
-    fun setThumbnail(title:String,link:String,comic:String){
-        titlename.setText(title)
+
+    fun setThumbnail(title: String, link: String, comic: String) {
+        titlename.text = title
         try {
             Glide.with(context).load(link).into(thumbnail)
-        }
-        catch (e:Exception)
-        {
-            Log.d("mydebug",e.toString())
-            Log.d("mydebug",thumbnail.toString())
+        } catch (e: Exception) {
+            Log.d("mydebug", e.toString())
+            Log.d("mydebug", thumbnail.toString())
         }
         this.setOnClickListener { v: View? ->
             val intent = Intent(context, Episode::class.java)
-            intent.putExtra("link",comic)
-            intent.putExtra("title",title)
-            intent.putExtra("thumbnail",link)
-            startActivity(context,intent,null)
+            intent.putExtra("link", comic)
+            intent.putExtra("title", title)
+            intent.putExtra("thumbnail", link)
+            startActivity(context, intent, null)
         }
 
     }
