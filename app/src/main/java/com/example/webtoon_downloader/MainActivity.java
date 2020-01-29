@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     String mainURL="https://comic.naver.com/webtoon/weekday.nhn";
     public linkControl linkControl=new linkControl();
     public Context mcontext;
-
+    Intent foregroundServiceIntent;
 
     Point displaySize = new Point();
 
@@ -38,6 +39,17 @@ public class MainActivity extends AppCompatActivity {
 
         mcontext=this;
         setContentView(R.layout.activity_main);
+
+        if(updateCheck.serviceIntent==null)
+        {
+            foregroundServiceIntent=new Intent(this,updateCheck.class);
+            startService(foregroundServiceIntent);
+        }
+        else
+        {
+            foregroundServiceIntent=updateCheck.serviceIntent;
+        }
+
 
         ////tabhost 세팅
         TabHost host= findViewById(R.id.host);
