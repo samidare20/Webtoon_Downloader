@@ -28,7 +28,7 @@ class WebtoonTiles @JvmOverloads constructor(
             Log.d("mydebug", e.toString())
             Log.d("mydebug", thumbnail.toString())
         }
-        this.setOnClickListener { v: View? ->
+        this.setOnClickListener {
             val intent = Intent(context, Episode::class.java)
             intent.putExtra("link", comic)
             intent.putExtra("title", title)
