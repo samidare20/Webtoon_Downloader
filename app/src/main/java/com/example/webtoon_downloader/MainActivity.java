@@ -21,13 +21,40 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 public class MainActivity extends AppCompatActivity {
-    String mainURL = "https://comic.naver.com/webtoon/weekday.nhn";
     public linkControl linkControl = new linkControl();
     public Context mcontext;
+    String mainURL = "https://comic.naver.com/webtoon/weekday.nhn";
     Intent foregroundServiceIntent;
 
     Point displaySize = new Point();
+    Handler handler = new Handler(msg -> {//타일 설정
+        String[] names = new String[]{"MontabContent", "TuetabContent", "WedtabContent", "ThutabContent", "FritabContent", "SattabContent", "SuntabContent"};
+        int nameindex = 0;
+        int index = 1;
+        String day = "";
+        itemList list;
 
+        while (index < linkControl.getElementList().size() && nameindex < 7) {
+            int id = getResources().getIdentifier(names[nameindex], "id", getPackageName());
+            nameindex++;
+            LinearLayout layout = findViewById(id);
+            list = linkControl.getElementList().get(index);
+            day = list.getDay();
+            while (day.equals(list.getDay())) {
+                WebtoonTiles tile = new WebtoonTiles(this, null, 0);
+                tile.setThumbnail(list.getTitle(), list.getImagesrc(), list.getComiclist());
+                layout.addView(tile);
+                tile.getLayoutParams().width = displaySize.x;
+
+                index++;
+                if (index >= linkControl.getElementList().size())
+                    break;
+                list = linkControl.getElementList().get(index);
+            }
+        }
+
+        return true;
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,40 +128,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start();
 
-        updateCheck a=new updateCheck();
+        updateCheck a = new updateCheck();
         a.makeAlarm(this);
 
     }
-
-    Handler handler = new Handler(msg -> {//타일 설정
-        String[] names = new String[]{"MontabContent", "TuetabContent", "WedtabContent", "ThutabContent", "FritabContent", "SattabContent", "SuntabContent"};
-        int nameindex = 0;
-        int index = 1;
-        String day = "";
-        itemList list;
-
-        while (index < linkControl.getElementList().size() && nameindex < 7) {
-            int id = getResources().getIdentifier(names[nameindex], "id", getPackageName());
-            nameindex++;
-            LinearLayout layout = findViewById(id);
-            list = linkControl.getElementList().get(index);
-            day = list.getDay();
-            while (day.equals(list.getDay())) {
-                WebtoonTiles tile = new WebtoonTiles(this, null, 0);
-                tile.setThumbnail(list.getTitle(), list.getImagesrc(), list.getComiclist());
-                layout.addView(tile);
-                tile.getLayoutParams().width = displaySize.x;
-
-                index++;
-                if (index >= linkControl.getElementList().size())
-                    break;
-                list = linkControl.getElementList().get(index);
-            }
-        }
-
-        return true;
-    });
-
 
     private void makePermission() {
         if (Build.VERSION.SDK_INT > 22) {

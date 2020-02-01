@@ -14,21 +14,21 @@ public class updateCheck extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.d("mydebug","background check");
+        Log.d("mydebug", "background check");
         makeAlarm(context);
     }
-    public void makeAlarm(Context context){
+
+    public void makeAlarm(Context context) {
 
         Intent intent = new Intent(context, updateCheck.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
-        long firstTime = System.currentTimeMillis()/1000;
+        long firstTime = System.currentTimeMillis() / 1000;
         firstTime += 10; //10초 후 알람 이벤트 발생
-        AlarmManager am = (AlarmManager)context.getSystemService(ALARM_SERVICE);
+        AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         //API 23 이상
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M) {
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10000, sender);
-        }
-        else if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)
-            am.setExact(AlarmManager.RTC_WAKEUP, firstTime, sender) ;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10000, sender);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            am.setExact(AlarmManager.RTC_WAKEUP, firstTime, sender);
     }
 }
