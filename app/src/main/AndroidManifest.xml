@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -20,16 +21,8 @@
         tools:ignore="GoogleAppIndexingWarning">
 
     <!-- service -->
-        <service
-            android:name=".restart"
-            android:enabled="true"
-            android:exported="true" />
-        <service
-            android:name=".updateCheck"
-            android:enabled="true"
-            android:exported="true" />
-    <!-- receiver -->
-        <receiver android:name=".AlarmReceiver"/>
+        <!-- receiver -->
+        <receiver android:name=".updateCheck"/>
 
         <activity android:name=".MainActivity">
             <intent-filter>

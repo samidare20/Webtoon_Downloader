@@ -40,12 +40,13 @@ public class MainActivity extends AppCompatActivity {
         mcontext = this;
         setContentView(R.layout.activity_main);
 
-        if (updateCheck.serviceIntent == null) {
+
+        /*if (updateCheck.serviceIntent == null) {
             foregroundServiceIntent = new Intent(this, updateCheck.class);
             startService(foregroundServiceIntent);
         } else {
             foregroundServiceIntent = updateCheck.serviceIntent;
-        }
+        }*/
 
 
         ////tabhost 세팅
@@ -100,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start();
 
+        updateCheck a=new updateCheck();
+        a.makeAlarm(this);
 
     }
 

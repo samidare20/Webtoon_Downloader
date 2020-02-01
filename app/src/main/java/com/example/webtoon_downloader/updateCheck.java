@@ -1,87 +1,34 @@
 package com.example.webtoon_downloader;
 
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.IBinder;
+import android.os.Build;
 import android.util.Log;
 
-import androidx.core.app.NotificationCompat;
+import static android.content.Context.ALARM_SERVICE;
 
-import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
-
-public class updateCheck extends Service {
-    public updateCheck() {
-    }
-
-    public static Intent serviceIntent = null;
-
+public class updateCheck extends BroadcastReceiver {
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    public void onReceive(Context context, Intent intent) {
+
+        Log.d("mydebug","background check");
+        makeAlarm(context);
     }
+    public void makeAlarm(Context context){
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        NotificationCompat.Builder mbuild = new NotificationCompat.Builder(this, "1004")
-                .setContentTitle("check")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setOngoing(false);
-
-
-        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        manager.notify(2, mbuild.build());
-
-        final int[] index = {1};
-        TimerTask tt = new TimerTask() {
-            @Override
-            public void run() {
-                if (index[0]++ >= 10)
-                    this.cancel();
-                Log.d("mydebug", "check" + index[0]);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(tt, 0, 3000);
-
-        return START_STICKY;
+        Intent intent = new Intent(context, updateCheck.class);
+        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
+        long firstTime = System.currentTimeMillis()/1000;
+        firstTime += 10; //10초 후 알람 이벤트 발생
+        AlarmManager am = (AlarmManager)context.getSystemService(ALARM_SERVICE);
+        //API 23 이상
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M) {
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10000, sender);
+        }
+        else if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT)
+            am.setExact(AlarmManager.RTC_WAKEUP, firstTime, sender) ;
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        final Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(System.currentTimeMillis());
-        cal.add(Calendar.SECOND, 1);
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, 0);
-
-        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarm.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
-        Log.d("mydebug", "service end");
-
-    }
-
-    @Override
-    public void onTaskRemoved(Intent rootIntent) {
-        super.onTaskRemoved(rootIntent);
-
-        final Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(System.currentTimeMillis());
-        cal.add(Calendar.SECOND, 3);
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, 0);
-
-        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarm.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
-        Log.d("mydebug", "service end");
-    }
-
-
 }
