@@ -84,9 +84,11 @@ public class MainActivity extends AppCompatActivity {
                     Document doc = Jsoup.connect(mainURL).get();
                     Elements elements = doc.select("div.col_inner");
                     linkControl.sethtml(elements.toString());
+                    linkControl.findUpdate(elements.toString());
                 } catch (Exception ex) {
                     Log.d("mydebug", ex.toString());
                 }
+
                 handler.sendMessage(handler.obtainMessage());
             }
         }.start();

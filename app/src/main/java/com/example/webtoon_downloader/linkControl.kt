@@ -9,6 +9,7 @@ class itemList {
     var imagesrc = ""//표지 이미지 링크
     var day = ""//요일
     var comiclist = ""//만화 회차 링크
+    var updated=false
 
     fun getElement(args: String) {
         var html = args
@@ -28,18 +29,9 @@ class itemList {
         day = html.substring(index + 1, index + 4)
     }
 }
-class updateCheck{
-    var title=""
-    var link=""
-    fun updateCheck(args: String){
-
-    }
-
-}
 class linkControl {
 
     var ElementList = ArrayList<itemList>()
-    var Updatelist=ArrayList<updateCheck>()
 
     //TODO update 여부를 판단하고 그것에 필요한  결과물
     //
@@ -47,19 +39,27 @@ class linkControl {
     //
     //2. 각 업데이트된 것들의 링크
 
+    fun updateCheck(args:String):Boolean{
+        Log.d("mydebug",args)
+        if("updt" in args)
+            return true
+        return false
+    }
     fun findUpdate(text: String){
         Log.d("mydebug","func check")
         val a=text.split("<li>")
-        var firstcheck=true;
-        for(i in a){
+        var firstcheck=true
+        for((index, i) in a.withIndex()){
+
             if(firstcheck){
                 firstcheck=false
                 continue
             }
             Log.d("mydebug",i)
-            var update=updateCheck()
-            update.updateCheck(i)
-            Updatelist.add(update)
+            ElementList[index].updated=updateCheck(i)
+            if(ElementList[index].updated==true)
+                Log.d("yee",ElementList[index].title)
+
         }
     }
 

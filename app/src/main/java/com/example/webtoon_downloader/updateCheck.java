@@ -10,7 +10,6 @@ import android.util.Log;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import static android.content.Context.ALARM_SERVICE;
@@ -19,8 +18,8 @@ public class updateCheck extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         linkControl link=new linkControl();
-        //Log.d("mydebug","background check");
-        new Thread(() -> {
+
+        /*new Thread(() -> {
             try {
                 Document doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get();
                 Elements elements = doc.select("div.col_inner");
@@ -29,7 +28,7 @@ public class updateCheck extends BroadcastReceiver {
             catch (Exception e){
                 Log.d("mydebug",e.toString());
             }
-        }).start();
+        }).start();*/
         //makeAlarm(context);
     }
 
