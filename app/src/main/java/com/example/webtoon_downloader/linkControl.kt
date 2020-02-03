@@ -1,7 +1,7 @@
 package com.example.webtoon_downloader
 
+import android.content.Context
 import android.util.Log
-import kotlin.TODO as TODO1
 
 class itemList {
     //표지 이미지, 웹툰 이름 저장하는 클래스
@@ -9,7 +9,7 @@ class itemList {
     var imagesrc = ""//표지 이미지 링크
     var day = ""//요일
     var comiclist = ""//만화 회차 링크
-    var updated=false
+    var updated = false
 
     fun getElement(args: String) {
         var html = args
@@ -29,6 +29,7 @@ class itemList {
         day = html.substring(index + 1, index + 4)
     }
 }
+
 class linkControl {
 
     var ElementList = ArrayList<itemList>()
@@ -39,41 +40,34 @@ class linkControl {
     //
     //2. 각 업데이트된 것들의 링크
 
-    fun updateCheck(args:String):Boolean{
-        Log.d("mydebug",args)
-        if("updt" in args)
+    fun updateCheck(args: String): Boolean {
+        Log.d("mydebug", args)
+        if ("updt" in args)
             return true
         return false
     }
-    fun findUpdate(text: String){
-        Log.d("mydebug","func check")
-        val a=text.split("<li>")
-        var firstcheck=true
-        for((index, i) in a.withIndex()){
 
-            if(firstcheck){
-                firstcheck=false
-                continue
-            }
-            Log.d("mydebug",i)
-            ElementList[index].updated=updateCheck(i)
-            if(ElementList[index].updated==true)
-                Log.d("yee",ElementList[index].title)
-
-        }
-    }
-
-    fun sethtml(text: String): ArrayList<itemList> {
+    fun sethtml(context: Context, text: String): ArrayList<itemList> {
         var a = text.split("<li>") //html을 <li>구분해서 분할(각 만화로 나누어짐)
         var firstCheck = true
         for (i in a) {
             if (firstCheck) {
-                firstCheck=false
+                firstCheck = false
                 continue
             }
             var itemlist = itemList()//나눈 만화를 각각 itemlist에 넣어 저장
             itemlist.getElement(i)
             ElementList.add(itemlist)
+            val db = Room_Database.getInstance(context)
+            Thread(Runnable {
+                Log.d("yee", itemlist.day)
+                var data = Room_Todo()
+                data.title = itemlist.title
+                data.ThumbnailLink = itemlist.imagesrc
+                data.EpisodeLink = itemlist.comiclist
+                data.day = itemlist.day
+                db.Room_DAO().insert(data)
+            }).start()
         }
         return ElementList
     }

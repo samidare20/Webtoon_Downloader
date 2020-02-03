@@ -20,9 +20,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     public linkControl linkControl = new linkControl();
-    public Context mcontext;
+    public Context mcontext = this;
     String mainURL = "https://comic.naver.com/webtoon/weekday.nhn";
     Intent foregroundServiceIntent;
 
@@ -36,44 +38,43 @@ public class MainActivity extends AppCompatActivity {
         display.getSize(displaySize);
         createNotificationChannel();
 
-        mcontext = this;
         setContentView(R.layout.activity_main);
 
         ////tabhost 세팅
         TabHost host = findViewById(R.id.host);
         host.setup();
         TabHost.TabSpec monspec = host.newTabSpec("tab1");
-        monspec.setContent(R.id.MontabContent);
+        monspec.setContent(R.id.montabContent);
         monspec.setIndicator("월");
         host.addTab(monspec);
 
         TabHost.TabSpec tuespec = host.newTabSpec("tab2");
-        tuespec.setContent(R.id.TuetabContent);
+        tuespec.setContent(R.id.tuetabContent);
         tuespec.setIndicator("화");
         host.addTab(tuespec);
 
         TabHost.TabSpec wedspec = host.newTabSpec("tab3");
-        wedspec.setContent(R.id.WedtabContent);
+        wedspec.setContent(R.id.wedtabContent);
         wedspec.setIndicator("수");
         host.addTab(wedspec);
 
         TabHost.TabSpec thuspec = host.newTabSpec("tab4");
-        thuspec.setContent(R.id.ThutabContent);
+        thuspec.setContent(R.id.thutabContent);
         thuspec.setIndicator("목");
         host.addTab(thuspec);
 
         TabHost.TabSpec frispec = host.newTabSpec("tab5");
-        frispec.setContent(R.id.FritabContent);
+        frispec.setContent(R.id.fritabContent);
         frispec.setIndicator("금");
         host.addTab(frispec);
 
         TabHost.TabSpec satspec = host.newTabSpec("tab6");
-        satspec.setContent(R.id.SattabContent);
+        satspec.setContent(R.id.sattabContent);
         satspec.setIndicator("토");
         host.addTab(satspec);
 
         TabHost.TabSpec sonspec = host.newTabSpec("tab7");
-        sonspec.setContent(R.id.SuntabContent);
+        sonspec.setContent(R.id.suntabContent);
         sonspec.setIndicator("일");
 
         host.addTab(sonspec);
@@ -83,27 +84,49 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     Document doc = Jsoup.connect(mainURL).get();
                     Elements elements = doc.select("div.col_inner");
-                    linkControl.sethtml(elements.toString());
-                    linkControl.findUpdate(elements.toString());
+                    linkControl.sethtml(mcontext, elements.toString());
+
                 } catch (Exception ex) {
                     Log.d("mydebug", ex.toString());
                 }
-
-                handler.sendMessage(handler.obtainMessage());
+                setTab();
             }
         }.start();
-
-        updateCheck a = new updateCheck();
-        a.makeAlarm(this);
-
     }
-    Handler handler = new Handler(msg -> {//타일 설정
-        String[] names = new String[]{"MontabContent", "TuetabContent", "WedtabContent", "ThutabContent", "FritabContent", "SattabContent", "SuntabContent"};
-        int nameindex = 0;
-        int index = 1;
-        String day = "";
-        itemList list;
 
+    Handler handler = new Handler(msg -> {
+
+        return true;
+    });
+
+    void setTab() {//타일 설정
+        String[] names = new String[]{"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
+        int index = 1;
+        String day;
+        itemList list;
+        Room_Database db = Room_Database.getInstance(mcontext);
+        int nameindex = 0;
+        List<Room_Todo> datalist;
+        Room_Todo data;
+        Log.d("mydebug", "thread check");
+        while (nameindex < 7) {
+            int id = getResources().getIdentifier(names[nameindex] + "tabContent", "id", getPackageName());
+            LinearLayout layout = findViewById(id);
+
+            datalist = db.Room_DAO().selectDay(names[nameindex]);
+            for (int i = 0; i < datalist.size(); i++) {
+                data = datalist.get(i);
+                WebtoonTiles tile = new WebtoonTiles(mcontext, null, 0);
+
+                tile.setThumbnail(data.title, data.ThumbnailLink, data.EpisodeLink);
+                Log.d("mydebug", data.title);
+                layout.addView(tile);
+                tile.getLayoutParams().width = displaySize.x;
+                nameindex++;
+            }
+        }
+
+/*
         while (index < linkControl.getElementList().size() && nameindex < 7) {
             int id = getResources().getIdentifier(names[nameindex], "id", getPackageName());
             nameindex++;
@@ -121,10 +144,11 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 list = linkControl.getElementList().get(index);
             }
-        }
+        }*/
 
-        return true;
-    });
+        updateCheck a = new updateCheck();
+        a.makeAlarm(this);
+    }
 
 
     private void makePermission() {

@@ -28,14 +28,14 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:id="@+id/MontabContent"
+                    android:id="@+id/montabContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/TuetabContent"
+                    android:id="@+id/tuetabContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
@@ -43,35 +43,35 @@
 
 
                 <LinearLayout
-                    android:id="@+id/WedtabContent"
+                    android:id="@+id/wedtabContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/ThutabContent"
+                    android:id="@+id/thutabContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/FritabContent"
+                    android:id="@+id/fritabContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/SattabContent"
+                    android:id="@+id/sattabContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
                 </LinearLayout>
 
                 <LinearLayout
-                        android:id="@+id/SuntabContent"
+                        android:id="@+id/suntabContent"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">

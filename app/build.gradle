@@ -29,7 +29,8 @@ android {
 dependencies {
     //room plugin
     implementation "androidx.room:room-runtime:2.2.3"
-    implementation "androidx.room:room-compiler:2.2.3"
+    //implementation "androidx.room:room-compiler:2.2.3"
+    annotationProcessor "androidx.room:room-compiler:2.2.3"
     kapt "android.arch.persistence.room:compiler:1.1.1"
     //
     implementation fileTree(dir: 'libs', include: ['*.jar'])

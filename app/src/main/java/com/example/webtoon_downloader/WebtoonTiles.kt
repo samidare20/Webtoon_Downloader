@@ -5,7 +5,6 @@ import android.content.Intent
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat.startActivity
 import com.bumptech.glide.Glide
