@@ -34,19 +34,6 @@ class linkControl {
 
     var ElementList = ArrayList<itemList>()
 
-    //TODO update 여부를 판단하고 그것에 필요한  결과물
-    //
-    //1. 각 업데이트된 것들의 제목
-    //
-    //2. 각 업데이트된 것들의 링크
-
-    fun updateCheck(args: String): Boolean {
-        Log.d("mydebug", args)
-        if ("updt" in args)
-            return true
-        return false
-    }
-
     fun sethtml(context: Context, text: String): ArrayList<itemList> {
         var a = text.split("<li>") //html을 <li>구분해서 분할(각 만화로 나누어짐)
         var firstCheck = true
@@ -60,7 +47,6 @@ class linkControl {
             ElementList.add(itemlist)
             val db = Room_Database.getInstance(context)
             Thread(Runnable {
-                Log.d("yee", itemlist.day)
                 var data = Room_Todo()
                 data.title = itemlist.title
                 data.ThumbnailLink = itemlist.imagesrc

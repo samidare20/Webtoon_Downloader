@@ -19,7 +19,7 @@ class WebtoonTiles @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.webtoon_tiles, this, true)
     }
 
-    fun setThumbnail(title: String, link: String, comic: String) {
+    fun setData(title: String, link: String, comic: String) {
         titlename.text = title
         try {
             Glide.with(context).load(link).into(thumbnail)

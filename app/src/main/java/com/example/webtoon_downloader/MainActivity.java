@@ -79,52 +79,66 @@ public class MainActivity extends AppCompatActivity {
 
         host.addTab(sonspec);
 
-        new Thread() {
-            public void run() {
-                try {
-                    Document doc = Jsoup.connect(mainURL).get();
-                    Elements elements = doc.select("div.col_inner");
-                    linkControl.sethtml(mcontext, elements.toString());
+        Thread a = new Thread(() -> {
+            try {
+                Document doc = Jsoup.connect(mainURL).get();
+                Elements elements = doc.select("div.col_inner");
+                linkControl.sethtml(mcontext, elements.toString());
 
-                } catch (Exception ex) {
-                    Log.d("mydebug", ex.toString());
-                }
-                setTab();
+            } catch (Exception ex) {
+                Log.d("mydebug", ex.toString());
             }
-        }.start();
+        });
+        a.start();
+        try {
+            a.join();
+        } catch (Exception e) {
+
+        }
+        new Thread(()->{
+            Room_Database db=Room_Database.getInstance(mcontext);
+
+            List<Room_Todo> test=db.Room_DAO().selectDay("mon");
+            for(int i=0;i<test.size();i++)
+                Log.d("yee",test.get(i).title);
+        }).start();
+
+        //setTab();
+
     }
 
-    Handler handler = new Handler(msg -> {
-
-        return true;
-    });
-
     void setTab() {//타일 설정
-        String[] names = new String[]{"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
-        int index = 1;
-        String day;
-        itemList list;
-        Room_Database db = Room_Database.getInstance(mcontext);
-        int nameindex = 0;
-        List<Room_Todo> datalist;
-        Room_Todo data;
-        Log.d("mydebug", "thread check");
-        while (nameindex < 7) {
-            int id = getResources().getIdentifier(names[nameindex] + "tabContent", "id", getPackageName());
-            LinearLayout layout = findViewById(id);
+        Handler mhandler = new Handler();
 
-            datalist = db.Room_DAO().selectDay(names[nameindex]);
-            for (int i = 0; i < datalist.size(); i++) {
-                data = datalist.get(i);
-                WebtoonTiles tile = new WebtoonTiles(mcontext, null, 0);
+        new Thread(() -> {
+            String[] names = new String[]{"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
+            int nameindex = 0;
+            Room_Database db = Room_Database.getInstance(mcontext);
 
-                tile.setThumbnail(data.title, data.ThumbnailLink, data.EpisodeLink);
-                Log.d("mydebug", data.title);
-                layout.addView(tile);
-                tile.getLayoutParams().width = displaySize.x;
-                nameindex++;
+            List<Room_Todo> datalist;
+
+
+            while (nameindex < 7) {
+                int id = MainActivity.this.getResources().getIdentifier(names[nameindex] + "tabContent", "id", MainActivity.this.getPackageName());
+                LinearLayout layout = MainActivity.this.findViewById(id);
+
+                datalist = db.Room_DAO().selectDay(names[nameindex]);
+                for (int i = 0; i < datalist.size(); i++) {
+                    Room_Todo data = datalist.get(i);
+                    mhandler.post(() -> {
+                        WebtoonTiles tile = new WebtoonTiles(mcontext, null, 0);
+                        tile.setData(data.title, data.ThumbnailLink, data.EpisodeLink);
+                        layout.addView(tile);
+                        tile.getLayoutParams().width = displaySize.x;
+
+                        Log.d("yee", data.title);
+                    });
+                    nameindex++;
+
+                }
             }
-        }
+        }).start();
+
 
 /*
         while (index < linkControl.getElementList().size() && nameindex < 7) {
