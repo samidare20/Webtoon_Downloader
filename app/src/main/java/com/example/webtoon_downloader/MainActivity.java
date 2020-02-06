@@ -40,6 +40,16 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        Thread a = new Thread(() -> {
+            try {
+                Document doc = Jsoup.connect(mainURL).get();
+                Elements elements = doc.select("div.col_inner");
+                linkControl.sethtml(mcontext, elements.toString());
+
+            } catch (Exception ex) {
+                Log.d("mydebug", ex.toString());
+            }
+        });
         ////tabhost 세팅
         TabHost host = findViewById(R.id.host);
         host.setup();
@@ -79,31 +89,15 @@ public class MainActivity extends AppCompatActivity {
 
         host.addTab(sonspec);
 
-        Thread a = new Thread(() -> {
-            try {
-                Document doc = Jsoup.connect(mainURL).get();
-                Elements elements = doc.select("div.col_inner");
-                linkControl.sethtml(mcontext, elements.toString());
 
-            } catch (Exception ex) {
-                Log.d("mydebug", ex.toString());
-            }
-        });
         a.start();
         try {
             a.join();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
-        new Thread(()->{
-            Room_Database db=Room_Database.getInstance(mcontext);
 
-            List<Room_Todo> test=db.Room_DAO().selectDay("mon");
-            for(int i=0;i<test.size();i++)
-                Log.d("yee",test.get(i).title);
-        }).start();
-
-        //setTab();
+        setTab();
 
     }
 
@@ -133,32 +127,11 @@ public class MainActivity extends AppCompatActivity {
 
                         Log.d("yee", data.title);
                     });
-                    nameindex++;
 
                 }
+                nameindex++;
             }
         }).start();
-
-
-/*
-        while (index < linkControl.getElementList().size() && nameindex < 7) {
-            int id = getResources().getIdentifier(names[nameindex], "id", getPackageName());
-            nameindex++;
-            LinearLayout layout = findViewById(id);
-            list = linkControl.getElementList().get(index);
-            day = list.getDay();
-            while (day.equals(list.getDay())) {
-                WebtoonTiles tile = new WebtoonTiles(this, null, 0);
-                tile.setThumbnail(list.getTitle(), list.getImagesrc(), list.getComiclist());
-                layout.addView(tile);
-                tile.getLayoutParams().width = displaySize.x;
-
-                index++;
-                if (index >= linkControl.getElementList().size())
-                    break;
-                list = linkControl.getElementList().get(index);
-            }
-        }*/
 
         updateCheck a = new updateCheck();
         a.makeAlarm(this);

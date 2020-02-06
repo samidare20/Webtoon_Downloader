@@ -21,7 +21,8 @@ public interface Room_DAO {
     @Query("SELECT * FROM Room_Todo WHERE title=:title")
     Room_Todo selectTitle(String title);
 
-    @Query("SELECT * FROM room_todo WHERE day LIKE :day")
+    //@Query("SELECT * FROM Room_todo WHERE day LIKE :day")
+    @Query("SELECT * FROM Room_Todo WHERE day = :day")
     List<Room_Todo> selectDay(String day);
 
 

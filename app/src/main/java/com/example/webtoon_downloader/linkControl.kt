@@ -1,7 +1,6 @@
 package com.example.webtoon_downloader
 
 import android.content.Context
-import android.util.Log
 
 class itemList {
     //표지 이미지, 웹툰 이름 저장하는 클래스
@@ -52,7 +51,11 @@ class linkControl {
                 data.ThumbnailLink = itemlist.imagesrc
                 data.EpisodeLink = itemlist.comiclist
                 data.day = itemlist.day
-                db.Room_DAO().insert(data)
+                try {
+                    db.Room_DAO().selectTitle(itemlist.title)
+                } catch (e: Exception) {
+                    db.Room_DAO().insert(data)
+                }
             }).start()
         }
         return ElementList

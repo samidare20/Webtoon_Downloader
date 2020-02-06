@@ -6,10 +6,10 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Room_Todo {
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    int id;
     public String title;//만화제목
     public String ThumbnailLink;//섬네일 링크
-    public String EpisodeLink;//회차 링크ㅇ
+    public String EpisodeLink;//회차 링크
     public String day;
 
 }
