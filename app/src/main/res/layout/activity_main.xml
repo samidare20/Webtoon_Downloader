@@ -3,83 +3,113 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
+
     <TabHost
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/host">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
-            <ScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scrollbars="none">
+                android:layout_height="wrap_content" />
+
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:id="@+id/montabContent"
+                <ScrollView
+                    android:id="@+id/montabScroll"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                </LinearLayout>
+                    android:layout_height="match_parent">
 
-                <LinearLayout
-                    android:id="@+id/tuetabContent"
+                    <LinearLayout
+                        android:id="@+id/montabContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </ScrollView>
+
+                <ScrollView
+                    android:id="@+id/tuetabScroll"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                </LinearLayout>
+                    android:layout_height="match_parent">
 
+                    <LinearLayout
+                        android:id="@+id/tuetabContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </ScrollView>
 
-                <LinearLayout
-                    android:id="@+id/wedtabContent"
+                <ScrollView
+                    android:id="@+id/wedtabScroll"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                </LinearLayout>
+                    android:layout_height="match_parent">
 
-                <LinearLayout
-                    android:id="@+id/thutabContent"
+                    <LinearLayout
+                        android:id="@+id/wedtabContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </ScrollView>
+
+                <ScrollView
+                    android:id="@+id/thutabScroll"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                </LinearLayout>
+                    android:layout_height="match_parent">
 
-                <LinearLayout
-                    android:id="@+id/fritabContent"
+                    <LinearLayout
+                        android:id="@+id/thutabContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </ScrollView>
+
+                <ScrollView
+                    android:id="@+id/fritabScroll"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                </LinearLayout>
+                    android:layout_height="match_parent">
 
-                <LinearLayout
-                    android:id="@+id/sattabContent"
+                    <LinearLayout
+                        android:id="@+id/fritabContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </ScrollView>
+
+                <ScrollView
+                    android:id="@+id/sattabScroll"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                </LinearLayout>
+                    android:layout_height="match_parent">
 
-                <LinearLayout
+                    <LinearLayout
+                        android:id="@+id/sattabContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </ScrollView>
+
+                <ScrollView
+                    android:id="@+id/suntabScroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
                         android:id="@+id/suntabContent"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </ScrollView>
 
             </FrameLayout>
-
-            </ScrollView>
         </LinearLayout>
     </TabHost>
 </LinearLayout>
