@@ -1,6 +1,7 @@
 package com.example.webtoon_downloader
 
 import android.content.Context
+import android.util.Log
 
 class itemList {
     //표지 이미지, 웹툰 이름 저장하는 클래스
@@ -8,7 +9,6 @@ class itemList {
     var imagesrc = ""//표지 이미지 링크
     var day = ""//요일
     var comiclist = ""//만화 회차 링크
-    var updated = false
 
     fun getElement(args: String) {
         var html = args
@@ -30,34 +30,33 @@ class itemList {
 }
 
 class linkControl {
-
-    var ElementList = ArrayList<itemList>()
-
-    fun sethtml(context: Context, text: String): ArrayList<itemList> {
+    fun sethtml(context: Context, text: String){
         var a = text.split("<li>") //html을 <li>구분해서 분할(각 만화로 나누어짐)
         var firstCheck = true
+
         for (i in a) {
             if (firstCheck) {
                 firstCheck = false
                 continue
             }
-            var itemlist = itemList()//나눈 만화를 각각 itemlist에 넣어 저장
+            val itemlist = itemList()//나눈 만화를 각각 itemlist에 넣어 저장
             itemlist.getElement(i)
-            ElementList.add(itemlist)
-            val db = Room_Database.getInstance(context)
             Thread(Runnable {
-                var data = Room_Todo()
-                data.title = itemlist.title
-                data.ThumbnailLink = itemlist.imagesrc
-                data.EpisodeLink = itemlist.comiclist
-                data.day = itemlist.day
-                try {
-                    db.Room_DAO().selectTitle(itemlist.title)
-                } catch (e: Exception) {
+                val db = Room_Database.getInstance(context)
+                Log.d("mdg",itemlist.title)
+                if(db.Room_DAO().selectTitle(itemlist.title)==null){
+                    Log.d("yee", itemlist.title)
+                    val data = Room_Todo()
+                    data.title = itemlist.title
+                    data.ThumbnailLink = itemlist.imagesrc
+                    data.EpisodeLink = itemlist.comiclist
+                    data.day = itemlist.day
                     db.Room_DAO().insert(data)
                 }
+                else
+                    Log.d("yee","exist")
             }).start()
+
         }
-        return ElementList
     }
 }

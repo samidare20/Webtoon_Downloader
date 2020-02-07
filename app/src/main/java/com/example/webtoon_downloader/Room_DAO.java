@@ -25,5 +25,8 @@ public interface Room_DAO {
     @Query("SELECT * FROM Room_Todo WHERE day = :day")
     List<Room_Todo> selectDay(String day);
 
+    @Query("DELETE FROM Room_todo")
+    void deleteAll();
+
 
 }

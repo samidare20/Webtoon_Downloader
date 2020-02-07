@@ -33,10 +33,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        makePermission();
-        Display display = getWindowManager().getDefaultDisplay();
-        display.getSize(displaySize);
-        createNotificationChannel();
+
 
         setContentView(R.layout.activity_main);
 
@@ -45,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
                 Document doc = Jsoup.connect(mainURL).get();
                 Elements elements = doc.select("div.col_inner");
                 linkControl.sethtml(mcontext, elements.toString());
-
             } catch (Exception ex) {
                 Log.d("mydebug", ex.toString());
             }
         });
+        a.start();
         ////tabhost 세팅
         TabHost host = findViewById(R.id.host);
         host.setup();
@@ -88,17 +85,16 @@ public class MainActivity extends AppCompatActivity {
         sonspec.setIndicator("일");
 
         host.addTab(sonspec);
-
-
-        a.start();
         try {
             a.join();
-        } catch (Exception ignored) {
-
-        }
-
+        } catch (Exception ignored) {  }
         setTab();
-
+        new Thread(() -> {
+            makePermission();
+            createNotificationChannel();
+        }).start();
+        Display display = getWindowManager().getDefaultDisplay();
+        display.getSize(displaySize);
     }
 
     void setTab() {//타일 설정
@@ -108,9 +104,7 @@ public class MainActivity extends AppCompatActivity {
             String[] names = new String[]{"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
             int nameindex = 0;
             Room_Database db = Room_Database.getInstance(mcontext);
-
             List<Room_Todo> datalist;
-
 
             while (nameindex < 7) {
                 int id = MainActivity.this.getResources().getIdentifier(names[nameindex] + "tabContent", "id", MainActivity.this.getPackageName());
@@ -124,8 +118,6 @@ public class MainActivity extends AppCompatActivity {
                         tile.setData(data.title, data.ThumbnailLink, data.EpisodeLink);
                         layout.addView(tile);
                         tile.getLayoutParams().width = displaySize.x;
-
-                        Log.d("yee", data.title);
                     });
 
                 }
@@ -137,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
         a.makeAlarm(this);
     }
 
-
     private void makePermission() {
         if (Build.VERSION.SDK_INT > 22) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -148,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("1004", "yee", NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            channel.setVibrationPattern(new long[0]);
+            channel.enableVibration(true);
             notificationManager.createNotificationChannel(channel);
         }
     }

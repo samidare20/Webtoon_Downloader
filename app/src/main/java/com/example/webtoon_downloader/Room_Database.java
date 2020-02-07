@@ -20,7 +20,7 @@ public abstract class Room_Database extends RoomDatabase {
         return DB;
     }
 
-    public static void destroyInstance() {
+    static void destroyInstance() {
         DB = null;
     }
 }

@@ -6,23 +6,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
+
+import java.util.List;
 
 import static android.content.Context.ALARM_SERVICE;
 
 public class updateCheck extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        new Thread(()->{
+            Room_Database db=Room_Database.getInstance(context);
+            List<Room_Todo> a=db.Room_DAO().getAll();
+            for(int i=0;i<a.size();i++)
+                Log.d("hello",a.get(i).title);
+        }).start();
 
-        /*new Thread(() -> {
-            try {
-                Document doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get();
-                Elements elements = doc.select("div.col_inner");
-                link.findUpdate(elements.toString());
-            }
-            catch (Exception e){
-                Log.d("mydebug",e.toString());
-            }
-        }).start();*/
         //makeAlarm(context);
     }
 
@@ -33,8 +32,7 @@ public class updateCheck extends BroadcastReceiver {
         AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         //API 23 이상
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000*60*5, sender);
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000, sender);
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000*60*5, sender);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
             am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000, sender);
     }

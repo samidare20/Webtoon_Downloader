@@ -34,7 +34,5 @@ class WebtoonTiles @JvmOverloads constructor(
             intent.putExtra("thumbnail", link)
             startActivity(context, intent, null)
         }
-
     }
-
 }
