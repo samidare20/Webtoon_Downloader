@@ -41,11 +41,10 @@ class linkControl {
             }
             val itemlist = itemList()//나눈 만화를 각각 itemlist에 넣어 저장
             itemlist.getElement(i)
-            Thread(Runnable {
+            val thread=Thread(Runnable {
                 val db = Room_Database.getInstance(context)
-                Log.d("mdg",itemlist.title)
+                Log.d("mydebug",itemlist.title)
                 if(db.Room_DAO().selectTitle(itemlist.title)==null){
-                    Log.d("yee", itemlist.title)
                     val data = Room_Todo()
                     data.title = itemlist.title
                     data.ThumbnailLink = itemlist.imagesrc
@@ -53,9 +52,9 @@ class linkControl {
                     data.day = itemlist.day
                     db.Room_DAO().insert(data)
                 }
-                else
-                    Log.d("yee","exist")
-            }).start()
+            })
+            thread.start()
+            thread.join()
 
         }
     }

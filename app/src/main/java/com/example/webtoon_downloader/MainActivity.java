@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     public linkControl linkControl = new linkControl();
     public Context mcontext = this;
     String mainURL = "https://comic.naver.com/webtoon/weekday.nhn";
-    Intent foregroundServiceIntent;
 
     Point displaySize = new Point();
 
@@ -92,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> {
             makePermission();
             createNotificationChannel();
+            Display display = getWindowManager().getDefaultDisplay();
+            display.getSize(displaySize);
         }).start();
-        Display display = getWindowManager().getDefaultDisplay();
-        display.getSize(displaySize);
     }
 
     void setTab() {//타일 설정
