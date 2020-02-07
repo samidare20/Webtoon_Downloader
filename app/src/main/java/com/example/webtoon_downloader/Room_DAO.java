@@ -10,22 +10,21 @@ import java.util.List;
 @Dao
 public interface Room_DAO {
     @Insert
-    void insert(Room_Todo data);
+    void insert(Room_Data data);
 
     @Delete
-    void delete(Room_Todo data);
+    void delete(Room_Data data);
 
-    @Query("SELECT * FROM Room_Todo")
-    List<Room_Todo> getAll();
+    @Query("SELECT * FROM Room_Data")
+    List<Room_Data> getAll();
 
-    @Query("SELECT * FROM Room_Todo WHERE title=:title")
-    Room_Todo selectTitle(String title);
+    @Query("SELECT * FROM Room_Data WHERE title=:title")
+    Room_Data selectTitle(String title);
 
-    //@Query("SELECT * FROM Room_todo WHERE day LIKE :day")
-    @Query("SELECT * FROM Room_Todo WHERE day = :day")
-    List<Room_Todo> selectDay(String day);
+    @Query("SELECT * FROM Room_Data WHERE day = :day")
+    List<Room_Data> selectDay(String day);
 
-    @Query("DELETE FROM Room_todo")
+    @Query("DELETE FROM Room_Data")
     void deleteAll();
 
 
