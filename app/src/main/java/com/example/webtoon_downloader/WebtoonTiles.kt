@@ -34,5 +34,13 @@ class WebtoonTiles @JvmOverloads constructor(
             intent.putExtra("thumbnail", link)
             startActivity(context, intent, null)
         }
+        bookmark.setOnClickListener {
+            val res=resources
+            if (res.getBoolean(R.bool.star_clicked)==false) {
+                bookmark.setImageResource(R.drawable.star_clicked)
+            }
+            else
+                bookmark.setImageResource(R.drawable.star)
+        }
     }
 }

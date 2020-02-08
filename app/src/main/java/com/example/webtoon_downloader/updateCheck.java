@@ -26,18 +26,23 @@ public class updateCheck extends BroadcastReceiver {
                 Elements elements = doc.select("div.col_inner");
                 String[] html=elements.toString().split("<li>");
                 String href;
+                String title;
+                int index;
                 for (String s : html) {
                     if(s.contains("updt")) {
                         href="https://comic.naver.com"+s.substring(s.indexOf("href")+6,s.indexOf("onclick")-2);
-                        checkEpisode(href,context);
+                        index=s.indexOf("title=");
+                        s=s.substring(index+7);
+                        title=s.substring(0,s.indexOf("\""));
+                        checkEpisode(title,href,context);
                     }
 
                 }
             } catch (Exception ignored) {  }
         }).start();
-        makeAlarm(context);
+        //makeAlarm(context);
     }
-    public void checkEpisode(String link,Context context){
+    public void checkEpisode(String webtoon,String link,Context context){
         try{
             Document doc=Jsoup.connect(link).get();
             Elements element=doc.select("tbody");
@@ -50,7 +55,7 @@ public class updateCheck extends BroadcastReceiver {
                     title=s.substring(s.indexOf("title=")+7,s.indexOf("alt=")-2);
                     if(first){
                         first=false;
-                        new Download(href,title,"test",context);
+                        new Download(href,title,webtoon,context);
                     }
 
                     Log.d("mdg", title+href);
