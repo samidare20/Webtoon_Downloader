@@ -8,7 +8,6 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -32,17 +31,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_main);
+
+        updateCheck alarm = new updateCheck();
+        alarm.makeAlarm(this);
 
         Thread a = new Thread(() -> {
             try {
                 Document doc = Jsoup.connect(mainURL).get();
                 Elements elements = doc.select("div.col_inner");
                 linkControl.sethtml(mcontext, elements.toString());
-            } catch (Exception ex) {
-                Log.d("mydebug", ex.toString());
+            } catch (Exception ignored) {
             }
         });
         a.start();
@@ -92,13 +91,13 @@ public class MainActivity extends AppCompatActivity {
         try {
             a.join();
         } catch (Exception ignored) {  }
-        setTab();
         new Thread(() -> {
             makePermission();
             createNotificationChannel();
-            Display display = getWindowManager().getDefaultDisplay();
-            display.getSize(displaySize);
         }).start();
+        Display display = getWindowManager().getDefaultDisplay();
+        display.getSize(displaySize);
+        setTab();
     }
 
     void setTab() {//타일 설정
@@ -129,8 +128,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
-        updateCheck a = new updateCheck();
-        a.makeAlarm(this);
+
     }
 
     private void makePermission() {

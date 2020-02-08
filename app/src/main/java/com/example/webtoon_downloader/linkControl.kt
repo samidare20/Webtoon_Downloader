@@ -1,7 +1,6 @@
 package com.example.webtoon_downloader
 
 import android.content.Context
-import android.util.Log
 
 class itemList {
     //표지 이미지, 웹툰 이름 저장하는 클래스
@@ -43,7 +42,6 @@ class linkControl {
             itemlist.getElement(i)
             val thread=Thread(Runnable {
                 val db = Room_Database.getInstance(context)
-                Log.d("mydebug",itemlist.title)
                 if(db.Room_DAO().selectTitle(itemlist.title)==null){
                     val data = Room_Data()
                     data.title = itemlist.title

@@ -1,7 +1,6 @@
 package com.example.webtoon_downloader
 
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Environment
@@ -18,7 +17,6 @@ import java.net.URL
 class Download(link: String, title: String, series: String, context: Context) {
     private var path = Environment.getExternalStorageDirectory().absolutePath.toString() + "/download/"
     private val intent = Intent(context, MainActivity::class.java)
-    private val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
     private val notificationManager: NotificationManager by lazy {
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
