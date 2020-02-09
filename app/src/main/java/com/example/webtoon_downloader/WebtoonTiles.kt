@@ -35,12 +35,8 @@ class WebtoonTiles @JvmOverloads constructor(
             startActivity(context, intent, null)
         }
         bookmark.setOnClickListener {
-            val res=resources
-            if (res.getBoolean(R.bool.star_clicked)==false) {
-                bookmark.setImageResource(R.drawable.star_clicked)
-            }
-            else
-                bookmark.setImageResource(R.drawable.star)
+            bookmark.isSelected = !bookmark.isSelected
+
         }
     }
 }
