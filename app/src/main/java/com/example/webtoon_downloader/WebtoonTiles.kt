@@ -36,7 +36,6 @@ class WebtoonTiles @JvmOverloads constructor(
         }
         bookmark.setOnClickListener {
             bookmark.isSelected = !bookmark.isSelected
-
         }
     }
 }
