@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             tools:srcCompat="@tools:sample/avatars"
             android:layout_margin="10dp"
-            android:layout_weight="0.5"/>
+            android:layout_weight="0.5" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,13 +36,12 @@
                 android:layout_height="match_parent"
                 android:text="타이틀"
                 android:layout_weight="0.5"
-                android:gravity="center"
-                />
+                android:gravity="center" />
+
             <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray"
-            />
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray" />
 
             <TextView
                 android:id="@+id/episode_writer"
@@ -50,16 +49,15 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="작가"
-                android:layout_weight="0.5"
-                />
+                android:layout_weight="0.5" />
         </LinearLayout>
 
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@drawable/episode_border"
-        />
+        android:background="@drawable/episode_border" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -70,7 +68,7 @@
             android:id="@+id/episode_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
         </LinearLayout>
 

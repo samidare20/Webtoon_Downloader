@@ -84,13 +84,14 @@ public class MainActivity extends AppCompatActivity {
 
         host.addTab(sonspec);
         host.setOnTabChangedListener(tabId -> {
-            int id=MainActivity.this.getResources().getIdentifier(tabId, "id", MainActivity.this.getPackageName());
-            ScrollView view=findViewById(id);
+            int id = MainActivity.this.getResources().getIdentifier(tabId, "id", MainActivity.this.getPackageName());
+            ScrollView view = findViewById(id);
             view.fullScroll(View.FOCUS_UP);
         });
         try {
             a.join();
-        } catch (Exception ignored) {  }
+        } catch (Exception ignored) {
+        }
         new Thread(() -> {
             makePermission();
             createNotificationChannel();

@@ -29,7 +29,7 @@ class itemList {
 }
 
 class linkControl {
-    fun sethtml(context: Context, text: String){
+    fun sethtml(context: Context, text: String) {
         var a = text.split("<li>") //html을 <li>구분해서 분할(각 만화로 나누어짐)
         var firstCheck = true
 
@@ -40,15 +40,15 @@ class linkControl {
             }
             val itemlist = itemList()//나눈 만화를 각각 itemlist에 넣어 저장
             itemlist.getElement(i)
-            val thread=Thread(Runnable {
+            val thread = Thread(Runnable {
                 val db = Room_Database.getInstance(context)
-                if(db.Room_DAO().selectTitle(itemlist.title)==null){
+                if (db.Room_DAO().selectTitle(itemlist.title) == null) {
                     val data = Room_Data()
                     data.title = itemlist.title
                     data.ThumbnailLink = itemlist.imagesrc
                     data.EpisodeLink = itemlist.comiclist
                     data.day = itemlist.day
-                    data.update=false
+                    data.update = false
                     db.Room_DAO().insert(data)
                 }
             })
