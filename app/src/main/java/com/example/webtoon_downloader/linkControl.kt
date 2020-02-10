@@ -30,7 +30,7 @@ class itemList {
 
 class linkControl {
     fun sethtml(context: Context, text: String) {
-        var a = text.split("<li>") //html을 <li>구분해서 분할(각 만화로 나누어짐)
+        val a = text.split("<li>") //html을 <li>구분해서 분할(각 만화로 나누어짐)
         var firstCheck = true
 
         for (i in a) {
@@ -48,7 +48,8 @@ class linkControl {
                     data.ThumbnailLink = itemlist.imagesrc
                     data.EpisodeLink = itemlist.comiclist
                     data.day = itemlist.day
-                    data.update = false
+                    data.update = " "
+                    data.bookmark=false
                     db.Room_DAO().insert(data)
                 }
             })

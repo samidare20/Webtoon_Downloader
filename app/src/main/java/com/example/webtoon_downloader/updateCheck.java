@@ -50,19 +50,15 @@ public class updateCheck extends BroadcastReceiver {
             Document doc = Jsoup.connect(link).get();
             Elements element = doc.select("tbody");
             String[] html = element.toString().split("<tr>");
-            String title;
-            String href;
-            for (String s : html) {
+            for (int i=html.length-1;i>=0;i--) {
+                String s=html[i];
                 if (s.contains("toonup")) {
-                    href = "https://comic.naver.com" + s.substring(s.indexOf("href") + 6, s.indexOf("onclick") - 2);
-                    title = s.substring(s.indexOf("title=") + 7, s.indexOf("alt=") - 2);
-                    if (first) {
-                        first = false;
-                        new Download(href, title, webtoon, context);
-                    }
+                    String href = "https://comic.naver.com" + s.substring(s.indexOf("href") + 6, s.indexOf("onclick") - 2);
+                    String title = s.substring(s.indexOf("title=") + 7, s.indexOf("alt=") - 2);
 
-                    Log.d("mdg", title + href);
-
+                    Room_Database db=Room_Database.getInstance(context);
+                    Room_Data data=db.Room_DAO().selectTitle(webtoon);
+                    Log.d("mdg",data.title);
                 }
             }
         } catch (Exception e) {

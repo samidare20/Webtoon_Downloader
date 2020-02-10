@@ -19,8 +19,9 @@ class WebtoonTiles @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.webtoon_tiles, this, true)
     }
 
-    fun setData(title: String, link: String, comic: String) {
+    fun setData(title: String, link: String, comic: String,mbookmark:Boolean) {
         titlename.text = title
+        bookmark.isSelected=mbookmark
         try {
             Glide.with(context).load(link).into(thumbnail)
         } catch (e: Exception) {
@@ -35,7 +36,13 @@ class WebtoonTiles @JvmOverloads constructor(
             startActivity(context, intent, null)
         }
         bookmark.setOnClickListener {
-            bookmark.isSelected = !bookmark.isSelected
+            Thread(Runnable {
+                if(bookmark.isSelected)
+                bookmark.isSelected = !bookmark.isSelected
+                val db = Room_Database.getInstance(context)
+                val data = db.Room_DAO().selectTitle("")
+                data.bookmark = bookmark.isSelected
+            }).start()
         }
     }
 }
