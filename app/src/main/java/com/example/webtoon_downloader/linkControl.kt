@@ -49,7 +49,7 @@ class linkControl {
                     data.EpisodeLink = itemlist.comiclist
                     data.day = itemlist.day
                     data.update = " "
-                    data.bookmark=false
+                    data.bookmark = false
                     db.Room_DAO().insert(data)
                 }
             })

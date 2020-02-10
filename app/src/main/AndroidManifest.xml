@@ -20,9 +20,9 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-    <!-- service -->
+        <!-- service -->
         <!-- receiver -->
-        <receiver android:name=".updateCheck"/>
+        <receiver android:name=".updateCheck" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

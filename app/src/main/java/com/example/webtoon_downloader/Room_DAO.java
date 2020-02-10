@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -24,8 +25,9 @@ public interface Room_DAO {
     @Query("SELECT * FROM Room_Data WHERE day = :day")
     List<Room_Data> selectDay(String day);
 
-    @Query("DELETE FROM Room_Data")
-    void deleteAll();
+    @Query("SELECT * FROM Room_Data WHERE bookmark")
+    List<Room_Data> selectBookmark();
 
-
+    @Update
+    void update(Room_Data data);
 }

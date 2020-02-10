@@ -12,34 +12,20 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.util.List;
+
 import static android.content.Context.ALARM_SERVICE;
 
 public class updateCheck extends BroadcastReceiver {
-    boolean first = true;
-    String mainlink = "https://comic.naver.com/webtoon/weekday.nhn";
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("hello", "alarm check");
         new Thread(() -> {
-            try {
-                Document doc = Jsoup.connect(mainlink).get();
-                Elements elements = doc.select("div.col_inner");
-                String[] html = elements.toString().split("<li>");
-                String href;
-                String title;
-                int index;
-                for (String s : html) {
-                    if (s.contains("updt")) {
-                        href = "https://comic.naver.com" + s.substring(s.indexOf("href") + 6, s.indexOf("onclick") - 2);
-                        index = s.indexOf("title=");
-                        s = s.substring(index + 7);
-                        title = s.substring(0, s.indexOf("\""));
-                        checkEpisode(title, href, context);
-                    }
-
-                }
-            } catch (Exception ignored) {
+            Room_Database db = Room_Database.getInstance(context);
+            List<Room_Data> data = db.Room_DAO().selectBookmark();
+            for (Room_Data a : data) {
+                checkEpisode(a.title, a.EpisodeLink, context);
             }
         }).start();
         //makeAlarm(context);
@@ -50,15 +36,20 @@ public class updateCheck extends BroadcastReceiver {
             Document doc = Jsoup.connect(link).get();
             Elements element = doc.select("tbody");
             String[] html = element.toString().split("<tr>");
-            for (int i=html.length-1;i>=0;i--) {
-                String s=html[i];
+            for (int i = html.length - 1; i >= 0; i--) {
+                String s = html[i];
                 if (s.contains("toonup")) {
                     String href = "https://comic.naver.com" + s.substring(s.indexOf("href") + 6, s.indexOf("onclick") - 2);
                     String title = s.substring(s.indexOf("title=") + 7, s.indexOf("alt=") - 2);
 
-                    Room_Database db=Room_Database.getInstance(context);
-                    Room_Data data=db.Room_DAO().selectTitle(webtoon);
-                    Log.d("mdg",data.title);
+                    Room_Database db = Room_Database.getInstance(context);
+                    Room_Data data = db.Room_DAO().selectTitle(webtoon);
+                    if (!data.update.equals(title)) {
+                        new Download(href, title, webtoon, context);
+                        data.update = title;
+                        db.Room_DAO().update(data);
+                    }
+                    Log.d("mdg", data.title);
                 }
             }
         } catch (Exception e) {

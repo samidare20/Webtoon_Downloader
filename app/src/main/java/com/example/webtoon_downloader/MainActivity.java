@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     Room_Data data = datalist.get(i);
                     mhandler.post(() -> {
                         WebtoonTiles tile = new WebtoonTiles(mcontext, null, 0);
-                        tile.setData(data.title, data.ThumbnailLink, data.EpisodeLink,data.bookmark);
+                        tile.setData(data.title, data.ThumbnailLink, data.EpisodeLink, data.bookmark);
                         layout.addView(tile);
                         tile.getLayoutParams().width = displaySize.x;
                     });
