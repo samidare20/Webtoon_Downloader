@@ -69,11 +69,11 @@ public class updateCheck extends BroadcastReceiver {
         } catch (Exception e) {
             Log.d("hello", e.toString());
         }
-
     }
 
     public void makeAlarm(Context context) {
         Intent intent = new Intent(context, updateCheck.class);
+        intent.putExtra("noti",1);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         //API 23 이상
