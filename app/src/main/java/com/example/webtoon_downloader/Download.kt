@@ -86,6 +86,7 @@ class Download(link: String, title: String, series: String, context: Context) {
             try {
                 val imageurl = URL(i)
                 val conn = imageurl.openConnection() as HttpURLConnection
+                conn.setRequestProperty("User-Agent", "Mozilla/4.0")
                 var input: InputStream
                 if (conn.responseCode == HttpURLConnection.HTTP_OK)
                     input = conn.inputStream
