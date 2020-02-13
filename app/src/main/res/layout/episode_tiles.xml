@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
-        android:background="?attr/selectableItemBackground"
         android:id="@+id/episode_title"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:text="test"
-        android:gravity="center" />
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:text="test" />
 
     <View
-        android:background="@drawable/episode_border"
         android:layout_width="match_parent"
-        android:layout_height="1dp" />
+        android:layout_height="1dp"
+        android:background="@drawable/episode_border" />
 
 </LinearLayout>

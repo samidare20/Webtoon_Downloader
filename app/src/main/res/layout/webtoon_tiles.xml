@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/selectableItemBackground"
-    android:weightSum="1"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <LinearLayout
         android:id="@+id/tile"
@@ -24,16 +24,16 @@
             android:id="@+id/titlename"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:layout_weight="0.9"
             android:gravity="center"
-            android:textSize="20sp"
-            android:layout_weight="0.9" />
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/bookmark"
             android:layout_width="wrap_content"
             android:layout_height="100dp"
-            android:src="@drawable/bookmark"
-            android:layout_weight="0.1" />
+            android:layout_weight="0.1"
+            android:src="@drawable/bookmark" />
 
 
     </LinearLayout>

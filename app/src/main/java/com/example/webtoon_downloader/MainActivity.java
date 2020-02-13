@@ -9,12 +9,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Display;
+import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TabHost;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -32,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar tb=findViewById(R.id.toolbar);
+        setSupportActionBar(tb);
+        tb.setTitle(null);
+
 
         updateCheck alarm = new updateCheck();
         alarm.makeAlarm(this);
@@ -146,5 +152,13 @@ public class MainActivity extends AppCompatActivity {
             channel.enableVibration(true);
             notificationManager.createNotificationChannel(channel);
         }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_launcher_foreground);
+        getMenuInflater().inflate(R.menu.appbar, menu);
+
+        return true ;
     }
 }
