@@ -1,7 +1,6 @@
 package com.example.webtoon_downloader;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -12,9 +11,6 @@ import java.util.List;
 public interface Room_DAO {
     @Insert
     void insert(Room_Data data);
-
-    @Delete
-    void delete(Room_Data data);
 
     @Query("SELECT * FROM Room_Data")
     List<Room_Data> getAll();
