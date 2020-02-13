@@ -1,4 +1,4 @@
-package com.example.webtoon_downloader;
+package com.myapp.webtoon_downloader;
 
 import android.Manifest;
 import android.app.NotificationChannel;
@@ -21,6 +21,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.myapp.webtoon_viewer.ViewerActivity;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -37,10 +38,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.downloader_activity_main);
         Toolbar tb=findViewById(R.id.toolbar);
         setSupportActionBar(tb);
-        tb.setTitle(null);
+        tb.setTitle("웹툰 다운로더");
 
         new updateCheck().makeAlarm(this);
 
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navi=findViewById(R.id.drawer);
         navi.setNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.viewer) {
-                Intent intent=new Intent(this,ViewerActivity.class);
+                Intent intent=new Intent(this, ViewerActivity.class);
                 startActivity(intent);
             }
             return true;

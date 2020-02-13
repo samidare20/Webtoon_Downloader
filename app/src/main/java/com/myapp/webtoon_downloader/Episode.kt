@@ -1,4 +1,4 @@
-package com.example.webtoon_downloader
+package com.myapp.webtoon_downloader
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -6,13 +6,13 @@ import android.os.Handler
 import android.os.Message
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.episode_main.*
+import kotlinx.android.synthetic.main.downloader_episode_main.*
 import org.jsoup.Jsoup
 
 class Episode : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.episode_main)
+        setContentView(R.layout.downloader_episode_main)
         val mcontext = this
         val intent = intent.extras!!
         Glide.with(this).load(intent.getString("thumbnail")).into(episode_thumbnail)

@@ -1,4 +1,4 @@
-package com.example.webtoon_downloader
+package com.myapp.webtoon_downloader
 
 import android.content.Context
 
@@ -42,30 +42,15 @@ class linkControl {
             itemlist.getElement(i)
             val thread = Thread(Runnable {
                 val db = Room_Database.getInstance(context)
-                try {
-                    if (db.Room_DAO().selectTitle(itemlist.title) == null) {
-                        val data = Room_Data()
-                        data.title = itemlist.title
-                        data.ThumbnailLink = itemlist.imagesrc
-                        data.EpisodeLink = itemlist.comiclist
-                        data.day = itemlist.day
-                        data.update = " "
-                        data.bookmark = false
-                        db.Room_DAO().insert(data)
-                    }
-                }
-                catch (E:Exception){
-                    db.destroyInstance()
-                    if (db.Room_DAO().selectTitle(itemlist.title) == null) {
-                        val data = Room_Data()
-                        data.title = itemlist.title
-                        data.ThumbnailLink = itemlist.imagesrc
-                        data.EpisodeLink = itemlist.comiclist
-                        data.day = itemlist.day
-                        data.update = " "
-                        data.bookmark = false
-                        db.Room_DAO().insert(data)
-                    }
+                if (db.Room_DAO().selectTitle(itemlist.title) == null) {
+                    val data = Room_Data()
+                    data.title = itemlist.title
+                    data.ThumbnailLink = itemlist.imagesrc
+                    data.EpisodeLink = itemlist.comiclist
+                    data.day = itemlist.day
+                    data.update = " "
+                    data.bookmark = false
+                    db.Room_DAO().insert(data)
                 }
             })
             thread.start()

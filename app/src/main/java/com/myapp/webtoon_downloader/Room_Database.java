@@ -1,4 +1,4 @@
-package com.example.webtoon_downloader;
+package com.myapp.webtoon_downloader;
 
 import android.content.Context;
 

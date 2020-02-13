@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.webtoon_downloader">
+    package="com.myapp.webtoon_downloader">
 
     <!-- permission -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -23,17 +23,17 @@
 
         <!-- service -->
         <!-- receiver -->
-        <receiver android:name=".updateCheck" />
+        <receiver android:name="com.myapp.webtoon_downloader.updateCheck" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name="com.myapp.webtoon_downloader.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Episode" />
-        <activity android:name=".ViewerActivity"/>
+        <activity android:name="com.myapp.webtoon_downloader.Episode" />
+        <activity android:name="com.myapp.webtoon_viewer.ViewerActivity"/>
     </application>
 
 </manifest>
