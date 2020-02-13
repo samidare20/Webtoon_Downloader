@@ -22,7 +22,10 @@ class WebtoonTiles @JvmOverloads constructor(
     fun setData(title: String, link: String, comic: String, mbookmark: Boolean) {
         titlename.text = title
         bookmark.isSelected = mbookmark
+        val db = Room_Database.getInstance(context)
+
         try {
+
             Glide.with(context).load(link).into(thumbnail)
         } catch (e: Exception) {
             Log.d("mydebug", e.toString())
@@ -39,7 +42,6 @@ class WebtoonTiles @JvmOverloads constructor(
         bookmark.setOnClickListener {
             Thread(Runnable {
                 bookmark.isSelected = !bookmark.isSelected
-                val db = Room_Database.getInstance(context)
                 val data = db.Room_DAO().selectTitle(title)
                 data.bookmark = bookmark.isSelected
                 db.Room_DAO().update(data)

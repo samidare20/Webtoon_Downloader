@@ -33,6 +33,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Episode" />
+        <activity android:name=".ViewerActivity"/>
     </application>
 
 </manifest>

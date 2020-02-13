@@ -4,12 +4,12 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Display;
-import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -17,6 +17,10 @@ import android.widget.TabHost;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -38,9 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(tb);
         tb.setTitle(null);
 
-
-        updateCheck alarm = new updateCheck();
-        alarm.makeAlarm(this);
+        new updateCheck().makeAlarm(this);
 
         Thread a = new Thread(() -> {
             try {
@@ -98,15 +100,15 @@ public class MainActivity extends AppCompatActivity {
             a.join();
         } catch (Exception ignored) {
         }
-        new Thread(() -> {
-            makePermission();
-            createNotificationChannel();
-        }).start();
+        makePermission();
+        createNotificationChannel();
         Display display = getWindowManager().getDefaultDisplay();
         display.getSize(displaySize);
+        setDrawer();
         setTab();
-    }
 
+
+    }
     void setTab() {//타일 설정
         Handler mhandler = new Handler();
 
@@ -137,7 +139,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+    void setDrawer(){
+        NavigationView navi=findViewById(R.id.drawer);
+        navi.setNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.viewer) {
+                Intent intent=new Intent(this,ViewerActivity.class);
+                startActivity(intent);
+            }
+            return true;
+        });
+    }
     private void makePermission() {
         if (Build.VERSION.SDK_INT > 22) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -154,11 +165,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_launcher_foreground);
-        getMenuInflater().inflate(R.menu.appbar, menu);
-
-        return true ;
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

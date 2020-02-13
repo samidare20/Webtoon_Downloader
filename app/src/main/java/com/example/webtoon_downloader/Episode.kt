@@ -35,7 +35,6 @@ class Episode : AppCompatActivity() {
             var prev = ""
             var page = 1
             while (true) {
-
                 val doc = Jsoup.connect(link + page.toString()).get()
                 val elements = doc.select("tbody").toString()
                 val html = elements.split("<tr>")
@@ -51,8 +50,8 @@ class Episode : AppCompatActivity() {
                         href += i.substring(i.indexOf("href") + 6, amp) + "&" + i.substring(amp + 5, i.indexOf("weekday") - 5)
                         title = i.substring(i.indexOf("title=") + 7)
                         title = title.substring(0, title.indexOf("\""))
-                        if (first == false) {
-                            if (prev.equals(title) == true) {
+                        if (!first) {
+                            if (prev == title) {
                                 end = true
                                 break
                             }
@@ -64,10 +63,10 @@ class Episode : AppCompatActivity() {
                     }
 
                     val message = Message.obtain()
-                    message.obj = href + "-" + title
+                    message.obj = "$href-$title"
                     handler.sendMessage(message)
                 }
-                if (end == true)
+                if (end)
                     break
                 page++
             }
