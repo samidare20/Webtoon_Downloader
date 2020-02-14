@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Webtoon_Downloader</string>
+    <bool name="star_clicked">false</bool>
 </resources>
