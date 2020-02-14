@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,9 +31,9 @@ import org.jsoup.select.Elements;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    public linkControl linkControl = new linkControl();
-    public Context mcontext = this;
-    String mainURL = "https://comic.naver.com/webtoon/weekday.nhn";
+
+    private Context mcontext = this;
+    private double backKeyPressedTime;
     Point displaySize = new Point();
 
     @Override
@@ -42,15 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         new updateCheck().makeAlarm(this);
 
-        Thread a = new Thread(() -> {
-            try {
-                Document doc = Jsoup.connect(mainURL).get();
-                Elements elements = doc.select("div.col_inner");
-                linkControl.sethtml(mcontext, elements.toString());
-            } catch (Exception ignored) {
-            }
-        });
-        a.start();
+
         ////tabhost 세팅
         TabHost host = findViewById(R.id.host);
         host.setup();
@@ -94,20 +87,16 @@ public class MainActivity extends AppCompatActivity {
             ScrollView view = findViewById(id);
             view.fullScroll(View.FOCUS_UP);
         });
-        try {
-            a.join();
-        } catch (Exception ignored) {
-        }
-        makePermission();
-        createNotificationChannel();
         Display display = getWindowManager().getDefaultDisplay();
         display.getSize(displaySize);
-        setDrawer();
         setTab();
-
         Toolbar tb = findViewById(R.id.toolbar);
         tb.setTitle("웹툰 다운로더");
         setSupportActionBar(tb);
+        setDrawer();
+
+        makePermission();
+        createNotificationChannel();
 
 
     }
@@ -139,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
     }
+
     void setDrawer() {
         NavigationView navi = findViewById(R.id.navi);
 
@@ -174,8 +164,29 @@ public class MainActivity extends AppCompatActivity {
         DrawerLayout drawer = findViewById(R.id.drawer);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
+        else {
+            if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+                backKeyPressedTime = System.currentTimeMillis();
+                Toast.makeText(this, "뒤로가기를 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+                finish();
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        new Thread(() -> {
+            try {
+                Document doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get();
+                Elements elements = doc.select("div.col_inner");
+                new linkControl().sethtml(mcontext, elements.toString());
+            } catch (Exception ignored) {
+            }
+        });
+        super.onResume();
     }
 }
