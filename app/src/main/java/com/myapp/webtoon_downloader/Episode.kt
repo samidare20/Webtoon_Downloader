@@ -21,7 +21,7 @@ class Episode : AppCompatActivity() {
         val handler = @SuppressLint("HandlerLeak")
         object : Handler() {
             override fun handleMessage(msg: Message) {
-                val episode = episodeTiles(mcontext, null, 0)
+                val episode = episodeTiles(mcontext)
                 var message = msg.obj.toString()
                 val title = message.substring(message.indexOf("-") + 1)
                 message = message.substring(0, message.indexOf("-"))

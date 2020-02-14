@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.downloader_activity_main);
         Toolbar tb=findViewById(R.id.toolbar);
-        setSupportActionBar(tb);
         tb.setTitle("웹툰 다운로더");
+        setSupportActionBar(tb);
 
         new updateCheck().makeAlarm(this);
 
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < datalist.size(); i++) {
                     Room_Data data = datalist.get(i);
                     mhandler.post(() -> {
-                        WebtoonTiles tile = new WebtoonTiles(mcontext, null, 0);
+                        WebtoonTiles tile = new WebtoonTiles(mcontext);
                         tile.setData(data.title, data.ThumbnailLink, data.EpisodeLink, data.bookmark);
                         layout.addView(tile);
                         tile.getLayoutParams().width = displaySize.x;
@@ -141,9 +141,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
     void setDrawer(){
-        NavigationView navi=findViewById(R.id.drawer);
+        NavigationView navi=findViewById(R.id.navi);
+
         navi.setNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.viewer) {
+                DrawerLayout drawer = findViewById(R.id.drawer);
+                drawer.closeDrawer(GravityCompat.START);
                 Intent intent=new Intent(this, ViewerActivity.class);
                 startActivity(intent);
             }
