@@ -3,7 +3,6 @@ package com.myapp.webtoon_downloader
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
-import android.content.Intent
 import android.os.Environment
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -17,8 +16,7 @@ import java.net.URL
 
 class Download(link: String, title: String, series: String, context: Context) {
     private var path = Environment.getExternalStorageDirectory().absolutePath.toString() + "/download/"
-    private val intent = Intent(context, MainActivity::class.java)
-    private val notificationManager=context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+    private val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
     init {
         object : Thread() {
@@ -117,7 +115,7 @@ class Download(link: String, title: String, series: String, context: Context) {
         notiBuilder.setGroup("1")
         notiBuilder.setProgress(0, 0, false)
         notificationManager.notify(1, notiBuilder.build())
-        notificationManager.notify(2, notiBuilder.build())
+        /*notificationManager.notify(2, notiBuilder.build())
         val summaryNotification = NotificationCompat.Builder(context, "1004")
                 .setContentTitle("webtoon_downloader")
                 //set content text to support devices running API level < 24
@@ -128,7 +126,8 @@ class Download(link: String, title: String, series: String, context: Context) {
                 //set this notification as the summary for the group
                 .setGroupSummary(true)
                 .build()
-        notificationManager.notify(0,summaryNotification)
+        notificationManager.notify(0, summaryNotification)
+        */
 
     }
 
@@ -137,7 +136,6 @@ class Download(link: String, title: String, series: String, context: Context) {
         notification.setProgress(size, progress, false)
         notification.setContentText("$progress/$size")
         notificationManager.notify(1, notification.build())
-
 
 
     }

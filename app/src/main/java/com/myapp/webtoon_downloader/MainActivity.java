@@ -39,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.downloader_activity_main);
-        Toolbar tb=findViewById(R.id.toolbar);
-        tb.setTitle("웹툰 다운로더");
-        setSupportActionBar(tb);
 
         new updateCheck().makeAlarm(this);
 
@@ -108,8 +105,13 @@ public class MainActivity extends AppCompatActivity {
         setDrawer();
         setTab();
 
+        Toolbar tb = findViewById(R.id.toolbar);
+        tb.setTitle("웹툰 다운로더");
+        setSupportActionBar(tb);
+
 
     }
+
     void setTab() {//타일 설정
         Handler mhandler = new Handler();
 
@@ -132,27 +134,25 @@ public class MainActivity extends AppCompatActivity {
                         layout.addView(tile);
                         tile.getLayoutParams().width = displaySize.x;
                     });
-
                 }
                 nameindex++;
             }
         }).start();
-
-
     }
-    void setDrawer(){
-        NavigationView navi=findViewById(R.id.navi);
+    void setDrawer() {
+        NavigationView navi = findViewById(R.id.navi);
 
         navi.setNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.viewer) {
                 DrawerLayout drawer = findViewById(R.id.drawer);
                 drawer.closeDrawer(GravityCompat.START);
-                Intent intent=new Intent(this, ViewerActivity.class);
+                Intent intent = new Intent(this, ViewerActivity.class);
                 startActivity(intent);
             }
             return true;
         });
     }
+
     private void makePermission() {
         if (Build.VERSION.SDK_INT > 22) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer);

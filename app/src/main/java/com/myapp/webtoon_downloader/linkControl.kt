@@ -11,19 +11,19 @@ class itemList {
 
     fun getElement(args: String) {
         var html = args
-        title = html.substring(html.indexOf("title=") + 7)//제목 알아냄
-        title = title.substring(0, title.indexOf("\""))
-
-        var a = html.substring(html.indexOf("src=\"") + 5) //표지 찾아냄
-        imagesrc = a.substring(0, a.indexOf(".jpg") + 4)
 
         html = html.substring(html.indexOf("href") + 7)
         comiclist = html
         comiclist = "https://comic.naver.com/" + comiclist.substring(0, comiclist.indexOf("\""))
         comiclist = comiclist.substring(0, comiclist.indexOf("amp") - 1)
 
+        html = html.substring(html.indexOf("src=\"") + 5) //표지 찾아냄
+        imagesrc = html.substring(0, html.indexOf(".jpg") + 4)
 
-        var index = html.indexOf("weekday") + 7//요일 알아냄
+        html = html.substring(html.indexOf("title=") + 7)//제목 알아냄
+        title = html.substring(0, title.indexOf("\""))
+
+        val index = html.indexOf("weekday") + 7//요일 알아냄
         day = html.substring(index + 1, index + 4)
     }
 }

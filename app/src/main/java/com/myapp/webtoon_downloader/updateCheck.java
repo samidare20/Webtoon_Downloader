@@ -29,18 +29,17 @@ public class updateCheck extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        NotificationManager notimanager=(NotificationManager)context.getSystemService(NOTIFICATION_SERVICE);
-        Notification noti=new NotificationCompat.Builder(context,"1004")
+        NotificationManager notimanager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        Notification noti = new NotificationCompat.Builder(context, "1004")
                 .setContentTitle("background")
                 .setContentText("check")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .build();
-        notimanager.notify(3,noti);
-        ConnectivityManager manager=(ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo network=manager.getActiveNetworkInfo();
-        if(network==null|| !network.isConnected() ||network.getType()!=ConnectivityManager.TYPE_WIFI)
-        {
-            Log.d("hello","no network");
+        notimanager.notify(3, noti);
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo network = manager.getActiveNetworkInfo();
+        if (network == null || !network.isConnected() || network.getType() != ConnectivityManager.TYPE_WIFI) {
+            Log.d("hello", "no network");
             makeAlarm(context);
             return;
         }
@@ -69,13 +68,12 @@ public class updateCheck extends BroadcastReceiver {
                     Room_Database db = Room_Database.getInstance(context);
                     Room_Data data = db.Room_DAO().selectTitle(webtoon);
                     if (!data.update.equals(title)) {
-                        Log.d("hello","download check");
+                        Log.d("hello", "download check");
                         new Download(href, title, webtoon, context);
                         data.update = title;
                         db.Room_DAO().update(data);
-                    }
-                    else{
-                        Log.d("hello",data.update);
+                    } else {
+                        Log.d("hello", data.update);
                     }
                 }
             }
@@ -90,7 +88,7 @@ public class updateCheck extends BroadcastReceiver {
         AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         //API 23 이상
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000 *10, sender);
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000 * 10, sender);
         else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
             am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000, sender);
     }

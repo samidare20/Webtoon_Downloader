@@ -8,13 +8,15 @@ import kotlinx.android.synthetic.main.viewer_file_tiles.view.*
 
 class fileTiles constructor(
         context: Context
-):LinearLayout(context){
-    var path=""
+) : LinearLayout(context) {
+    var path = ""
+
     init {
-        LayoutInflater.from(context).inflate(R.layout.viewer_file_tiles,this,true)
+        LayoutInflater.from(context).inflate(R.layout.viewer_file_tiles, this, true)
     }
-    fun setData(root:String){
-        path=root
-        filename.text=root.substring(root.lastIndexOf("/")+1,root.length)
+
+    fun setData(root: String) {
+        path = root
+        filename.text = root.substring(root.lastIndexOf("/") + 1, root.length)
     }
 }
