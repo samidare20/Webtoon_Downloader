@@ -19,7 +19,7 @@ import java.util.Collections;
 public class ViewerActivity extends AppCompatActivity {
     String rootPath= Environment.getExternalStorageDirectory().getAbsolutePath();
     String nowPath= Environment.getExternalStorageDirectory().getAbsolutePath();
-    ArrayList<String> filelist=new ArrayList<>();
+    ArrayList<imageItems> filelist=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,21 +30,21 @@ public class ViewerActivity extends AppCompatActivity {
     private void makelist() {
         getFileList();
         LinearLayout field = findViewById(R.id.fileField);
-        for (String i : filelist) {
+        for (imageItems i : filelist) {
             fileTiles t = new fileTiles(this);
-            if(i.contains("jpg")){
-                Log.d("mdg",i);
+            if(i.getNumber()!=-1){
+                Log.d("mdg",i.getPath());
                 ImageView image=new ImageView(this);
-                File file=new File(i);
+                File file=new File(i.getPath());
                 Bitmap bm= BitmapFactory.decodeFile(file.getAbsolutePath());
                 image.setImageBitmap(bm);
                 field.addView(image);
             }
             else {
-                t.setData(i);
+                t.setData(i.getPath());
                 t.setOnClickListener(v -> {
                     field.removeAllViews();
-                    nowPath = i;
+                    nowPath = i.getPath();
                     filelist.clear();
                     makelist();
                 });
@@ -59,8 +59,14 @@ public class ViewerActivity extends AppCompatActivity {
         if (files != null) {
             for(File i : files) {
                 String t=String.valueOf(i);
-                if('.'!=(t.charAt(t.lastIndexOf("/")+1)))
-                    filelist.add(String.valueOf(i));
+                if('.'!=(t.charAt(t.lastIndexOf("/")+1))) {
+                    imageItems item;
+                    if(i.getPath().contains("jpg"))
+                        item = new imageItems(i.getPath(), true);
+                    else
+                        item = new imageItems(i.getPath(), false);
+                    filelist.add(item);
+                }
             }
         }
         Collections.sort(filelist);
