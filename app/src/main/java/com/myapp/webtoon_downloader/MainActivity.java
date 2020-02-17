@@ -5,13 +5,11 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TabHost;
@@ -33,7 +31,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Point displaySize = new Point();
     private Context mcontext = this;
     private double backKeyPressedTime;
 
@@ -97,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
             ScrollView view = findViewById(id);
             view.fullScroll(View.FOCUS_UP);
         });
-        Display display = getWindowManager().getDefaultDisplay();
-        display.getSize(displaySize);
         try {
             a.join();
         } catch (Exception ignored) {
@@ -136,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                         WebtoonTiles tile = new WebtoonTiles(mcontext);
                         tile.setData(data.title, data.ThumbnailLink, data.EpisodeLink, data.bookmark);
                         layout.addView(tile);
-                        tile.getLayoutParams().width = displaySize.x;
+                        tile.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
                     });
                 }
                 nameindex++;
