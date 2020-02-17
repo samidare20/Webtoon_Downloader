@@ -17,7 +17,6 @@ class itemList(args:String){
         comiclist = comiclist.substring(0, comiclist.indexOf("amp") - 1)
 
         html = html.substring(html.indexOf("src=\"") + 5) //표지 찾아냄
-        Log.d("mdg",html)
         imagesrc = html.substring(0, html.indexOf("\" width"))
 
         html = html.substring(html.indexOf("title=") + 7)//제목 알아냄
@@ -31,6 +30,8 @@ class itemList(args:String){
 
 class linkControl {
     fun sethtml(context: Context, text: String) {
+        print("check--------\n")
+
         val a = text.split("<li>") //html을 <li>구분해서 분할(각 만화로 나누어짐)
         var firstCheck = true
 

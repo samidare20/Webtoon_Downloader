@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -41,15 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         new updateCheck().makeAlarm(this);
 
-        Thread a = new Thread(() -> {
-            try {
-                Document doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get();
-                Elements elements = doc.select("div.col_inner");
-                new linkControl().sethtml(mcontext, elements.toString());
-            } catch (Exception ignored) {
-            }
-        });
-        a.start();
+
 
         ///tabhost 세팅
         TabHost host = findViewById(R.id.host);
@@ -94,11 +87,6 @@ public class MainActivity extends AppCompatActivity {
             ScrollView view = findViewById(id);
             view.fullScroll(View.FOCUS_UP);
         });
-        try {
-            a.join();
-        } catch (Exception ignored) {
-
-        }
         setTab();
         Toolbar tb = findViewById(R.id.toolbar);
         tb.setTitle("웹툰 다운로더");
@@ -186,8 +174,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*@Override
+    @Override
     public void onResume() {
+
+        new Thread(() -> {
+            Log.d("hello","onresume");
+            try {
+                Document doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get();
+                Elements elements = doc.select("div.col_inner");
+                new linkControl().sethtml(mcontext, elements.toString());
+            } catch (Exception ignored) {
+            }
+        }).start();
         super.onResume();
-    }*/
+    }
 }
