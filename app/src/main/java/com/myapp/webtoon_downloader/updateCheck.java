@@ -1,8 +1,6 @@
 package com.myapp.webtoon_downloader;
 
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,8 +10,6 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.util.Log;
 
-import androidx.core.app.NotificationCompat;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -22,20 +18,11 @@ import java.util.List;
 
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.CONNECTIVITY_SERVICE;
-import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class updateCheck extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
-        NotificationManager notimanager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        Notification noti = new NotificationCompat.Builder(context, "1004")
-                .setContentTitle("background")
-                .setContentText("check")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .build();
-        notimanager.notify(3, noti);
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo network = manager.getActiveNetworkInfo();
         if (network == null || !network.isConnected() || network.getType() != ConnectivityManager.TYPE_WIFI) {

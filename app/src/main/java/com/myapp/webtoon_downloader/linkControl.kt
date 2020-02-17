@@ -1,30 +1,33 @@
 package com.myapp.webtoon_downloader
 
 import android.content.Context
+import android.util.Log
 
-class itemList {
+class itemList(args:String){
     //표지 이미지, 웹툰 이름 저장하는 클래스
     var title = ""//이름
     var imagesrc = ""//표지 이미지 링크
     var day = ""//요일
     var comiclist = ""//만화 회차 링크
-
-    fun getElement(args: String) {
+    init {
         var html = args
 
         html = html.substring(html.indexOf("href") + 7)
-        comiclist = html
-        comiclist = "https://comic.naver.com/" + comiclist.substring(0, comiclist.indexOf("\""))
+        comiclist = "https://comic.naver.com/" + html.substring(0, html.indexOf("\""))
         comiclist = comiclist.substring(0, comiclist.indexOf("amp") - 1)
 
         html = html.substring(html.indexOf("src=\"") + 5) //표지 찾아냄
-        imagesrc = html.substring(0, html.indexOf(".jpg") + 4)
+        Log.d("mdg",html)
+            imagesrc = html.substring(0, html.indexOf("\" width"))
 
         html = html.substring(html.indexOf("title=") + 7)//제목 알아냄
-        title = html.substring(0, title.indexOf("\""))
+        title = html.substring(0, html.indexOf("\""))
 
         val index = html.indexOf("weekday") + 7//요일 알아냄
         day = html.substring(index + 1, index + 4)
+        if(title=="이것도 친구라고")
+            Log.d("hello",imagesrc)
+
     }
 }
 
@@ -38,8 +41,7 @@ class linkControl {
                 firstCheck = false
                 continue
             }
-            val itemlist = itemList()//나눈 만화를 각각 itemlist에 넣어 저장
-            itemlist.getElement(i)
+            val itemlist = itemList(i)//나눈 만화를 각각 itemlist에 넣어 저장
             val thread = Thread(Runnable {
                 val db = Room_Database.getInstance(context)
                 if (db.Room_DAO().selectTitle(itemlist.title) == null) {

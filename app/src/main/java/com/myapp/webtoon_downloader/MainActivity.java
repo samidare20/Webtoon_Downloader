@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -32,9 +33,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    Point displaySize = new Point();
     private Context mcontext = this;
     private double backKeyPressedTime;
-    Point displaySize = new Point();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +44,17 @@ public class MainActivity extends AppCompatActivity {
 
         new updateCheck().makeAlarm(this);
 
+        Thread a = new Thread(() -> {
+            try {
+                Document doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get();
+                Elements elements = doc.select("div.col_inner");
+                new linkControl().sethtml(mcontext, elements.toString());
+            } catch (Exception ignored) {
+            }
+        });
+        a.start();
 
-        ////tabhost 세팅
+        ///tabhost 세팅
         TabHost host = findViewById(R.id.host);
         host.setup();
         TabHost.TabSpec monspec = host.newTabSpec("montabScroll");
@@ -89,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
         });
         Display display = getWindowManager().getDefaultDisplay();
         display.getSize(displaySize);
+        try {
+            a.join();
+        } catch (Exception ignored) {
+
+        }
         setTab();
         Toolbar tb = findViewById(R.id.toolbar);
         tb.setTitle("웹툰 다운로더");
@@ -164,8 +179,7 @@ public class MainActivity extends AppCompatActivity {
         DrawerLayout drawer = findViewById(R.id.drawer);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else {
+        } else {
             if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
                 backKeyPressedTime = System.currentTimeMillis();
                 Toast.makeText(this, "뒤로가기를 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
@@ -177,16 +191,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
+    /*@Override
     public void onResume() {
-        new Thread(() -> {
-            try {
-                Document doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get();
-                Elements elements = doc.select("div.col_inner");
-                new linkControl().sethtml(mcontext, elements.toString());
-            } catch (Exception ignored) {
-            }
-        });
         super.onResume();
-    }
+    }*/
 }

@@ -10,8 +10,6 @@ import androidx.room.RoomDatabase;
 public abstract class Room_Database extends RoomDatabase {
     private static Room_Database DB;
 
-    public abstract Room_DAO Room_DAO();
-
     public static Room_Database getInstance(Context context) {
         if (DB == null) {
             DB = Room.databaseBuilder(context, Room_Database.class, "Database")
@@ -19,4 +17,6 @@ public abstract class Room_Database extends RoomDatabase {
         }
         return DB;
     }
+
+    public abstract Room_DAO Room_DAO();
 }
