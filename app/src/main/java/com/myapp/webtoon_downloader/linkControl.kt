@@ -18,15 +18,13 @@ class itemList(args:String){
 
         html = html.substring(html.indexOf("src=\"") + 5) //표지 찾아냄
         Log.d("mdg",html)
-            imagesrc = html.substring(0, html.indexOf("\" width"))
+        imagesrc = html.substring(0, html.indexOf("\" width"))
 
         html = html.substring(html.indexOf("title=") + 7)//제목 알아냄
         title = html.substring(0, html.indexOf("\""))
 
         val index = html.indexOf("weekday") + 7//요일 알아냄
         day = html.substring(index + 1, index + 4)
-        if(title=="이것도 친구라고")
-            Log.d("hello",imagesrc)
 
     }
 }
