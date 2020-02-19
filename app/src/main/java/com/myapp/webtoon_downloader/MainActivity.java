@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,14 +33,15 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Boolean gettingData = true;
     private Context mcontext = this;
     private double backKeyPressedTime;
-
+    SharedPreferences mpreference;
+    SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.downloader_activity_main);
+        mpreference=getSharedPreferences(getPackageName(),Context.MODE_PRIVATE);
         new updateCheck().makeAlarm(this);
 
 
@@ -99,21 +101,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void setTab() {//타일 설정
-        Handler mhandler = new Handler();
-
-        while (gettingData) {
+        if(!mpreference.getBoolean("getdata",false)){
+            Log.d("hello", "onresume");
             try {
-                wait();
+                Document doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get();
+                Elements elements = doc.select("div.col_inner");
+                new linkControl().sethtml(mcontext, elements.toString(),false);
             } catch (Exception ignored) {
-
             }
+            editor=mpreference.edit();
+            editor.putBoolean("getdata",true);
+            editor.commit();
         }
-        try {
-            notifyAll();
-        } catch (Exception ignored) {
-
-        }
-
+        Log.d("mdg","check");
+        Handler mhandler = new Handler();
         new Thread(() -> {
             String[] names = new String[]{"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
             int nameindex = 0;
@@ -125,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 LinearLayout layout = MainActivity.this.findViewById(id);
 
                 datalist = db.Room_DAO().selectDay(names[nameindex]);
+
                 for (int i = 0; i < datalist.size(); i++) {
                     Room_Data data = datalist.get(i);
                     mhandler.post(() -> {
@@ -188,16 +190,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-        gettingData = false;
-        new Thread(() -> {
             Log.d("hello", "onresume");
             try {
                 Document doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get();
                 Elements elements = doc.select("div.col_inner");
-                new linkControl().sethtml(mcontext, elements.toString());
+                new linkControl().sethtml(mcontext, elements.toString(),true);
             } catch (Exception ignored) {
             }
-        }).start();
+        editor=mpreference.edit();
+        editor.putBoolean("getdata",true);
+        editor.commit();
         super.onResume();
     }
 }

@@ -37,10 +37,9 @@ class itemList(args: String) {
 }
 
 class linkControl {
-    fun sethtml(context: Context, text: String) {
+    fun sethtml(context: Context, text: String,setui:Boolean) {
         val a = text.split("<li>") //html을 <li>구분해서 분할(각 만화로 나누어짐)
 
-        print(a)
         var firstCheck = true
         var maincheck: Boolean
         for (i in a) {
@@ -49,11 +48,12 @@ class linkControl {
                 continue
             }
             maincheck = false
-            val itemlist = itemList(i)//나눈 만화를 각각 itemlist에 넣어 저장
+            var itemlist:itemList//나눈 만화를 각각 itemlist에 넣어 저장
             //  Log.d("mydebug", "${itemlist.title} ${itemlist.day}")
             CoroutineScope(Dispatchers.Main).launch {
                 CoroutineScope(Dispatchers.Default).launch {
                     val db = Room_Database.getInstance(context)
+                    itemlist = itemList(i)//나눈 만화를 각각 itemlist에 넣어 저장
                     if (db.Room_DAO().selectTitle(itemlist.title) == null) {
                         maincheck = true
                         val data = Room_Data()
@@ -66,8 +66,7 @@ class linkControl {
                         db.Room_DAO().insert(data)
                     }
                 }
-                Log.d("hello", "${itemlist.title} ${itemlist.day}")
-                if (maincheck)
+                if (maincheck&&setui)
                     settab(context, itemlist)
                 joinAll()
             }
