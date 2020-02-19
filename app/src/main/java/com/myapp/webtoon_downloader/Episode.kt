@@ -63,6 +63,7 @@ class Episode : AppCompatActivity() {
                     }
 
                     val message = Message.obtain()
+
                     message.obj = "$href-$title"
                     handler.sendMessage(message)
                 }

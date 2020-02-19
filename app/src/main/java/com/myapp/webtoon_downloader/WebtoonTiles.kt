@@ -25,7 +25,7 @@ class WebtoonTiles constructor(
             Glide.with(context).load(thumblink).into(thumbnail)
         } catch (e: Exception) {
             //Log.d("mydebug", e.toString())
-            Log.d("mydebug","glide error")
+            Log.d("mydebug", "glide error")
             Log.d("mydebug", thumbnail.toString())
         }
         this.setOnClickListener {

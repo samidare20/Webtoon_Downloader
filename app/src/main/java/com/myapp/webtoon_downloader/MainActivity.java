@@ -32,6 +32,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    Boolean gettingData = true;
     private Context mcontext = this;
     private double backKeyPressedTime;
 
@@ -39,9 +40,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.downloader_activity_main);
-
         new updateCheck().makeAlarm(this);
-
 
 
         ///tabhost 세팅
@@ -101,6 +100,19 @@ public class MainActivity extends AppCompatActivity {
 
     void setTab() {//타일 설정
         Handler mhandler = new Handler();
+
+        while (gettingData) {
+            try {
+                wait();
+            } catch (Exception ignored) {
+
+            }
+        }
+        try {
+            notifyAll();
+        } catch (Exception ignored) {
+
+        }
 
         new Thread(() -> {
             String[] names = new String[]{"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
@@ -176,9 +188,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-
+        gettingData = false;
         new Thread(() -> {
-            Log.d("hello","onresume");
+            Log.d("hello", "onresume");
             try {
                 Document doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get();
                 Elements elements = doc.select("div.col_inner");
