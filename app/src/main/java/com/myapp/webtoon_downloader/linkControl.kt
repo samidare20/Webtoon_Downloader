@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import org.jsoup.Jsoup
 
 class itemList(args: String) {
     //표지 이미지, 웹툰 이름 저장하는 클래스
@@ -37,8 +38,15 @@ class itemList(args: String) {
 }
 
 class linkControl {
-    fun sethtml(context: Context, text: String,setui:Boolean) {
-        val a = text.split("<li>") //html을 <li>구분해서 분할(각 만화로 나누어짐)
+    fun sethtml(context: Context,setui:Boolean) {
+
+       // val a = text.split("<li>") //html을 <li>구분해서 분할(각 만화로 나누어짐)
+        var a= emptyList<String>()
+        CoroutineScope(Dispatchers.IO).launch {
+            val doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get()
+            val text = doc.select("div.col_inner").toString()
+            a=text.split("<li>")
+        }
 
         var firstCheck = true
         var maincheck: Boolean
@@ -48,13 +56,14 @@ class linkControl {
                 continue
             }
             maincheck = false
-            var itemlist:itemList//나눈 만화를 각각 itemlist에 넣어 저장
+            val itemlist = itemList(i)//나눈 만화를 각각 itemlist에 넣어 저장
             //  Log.d("mydebug", "${itemlist.title} ${itemlist.day}")
             CoroutineScope(Dispatchers.Main).launch {
                 CoroutineScope(Dispatchers.Default).launch {
                     val db = Room_Database.getInstance(context)
-                    itemlist = itemList(i)//나눈 만화를 각각 itemlist에 넣어 저장
+
                     if (db.Room_DAO().selectTitle(itemlist.title) == null) {
+                        Log.d("yee",itemlist.title)
                         maincheck = true
                         val data = Room_Data()
                         data.title = itemlist.title

@@ -25,10 +25,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.myapp.webtoon_viewer.ViewerActivity;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,11 +33,12 @@ public class MainActivity extends AppCompatActivity {
     private double backKeyPressedTime;
     SharedPreferences mpreference;
     SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.downloader_activity_main);
-        mpreference=getSharedPreferences(getPackageName(),Context.MODE_PRIVATE);
+        mpreference = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         new updateCheck().makeAlarm(this);
 
 
@@ -101,19 +98,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void setTab() {//타일 설정
-        if(!mpreference.getBoolean("getdata",false)){
-            Log.d("hello", "onresume");
-            try {
-                Document doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get();
-                Elements elements = doc.select("div.col_inner");
-                new linkControl().sethtml(mcontext, elements.toString(),false);
-            } catch (Exception ignored) {
-            }
-            editor=mpreference.edit();
-            editor.putBoolean("getdata",true);
+        if (!mpreference.getBoolean("getdata", false)) {
+            Log.d("hello", "onif");
+            new linkControl().sethtml(mcontext, false);
+            editor = mpreference.edit();
+            editor.putBoolean("getdata", true);
             editor.commit();
         }
-        Log.d("mdg","check");
+        Log.d("mdg", "check");
         Handler mhandler = new Handler();
         new Thread(() -> {
             String[] names = new String[]{"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
@@ -190,15 +182,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-            Log.d("hello", "onresume");
-            try {
-                Document doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get();
-                Elements elements = doc.select("div.col_inner");
-                new linkControl().sethtml(mcontext, elements.toString(),true);
-            } catch (Exception ignored) {
-            }
-        editor=mpreference.edit();
-        editor.putBoolean("getdata",true);
+        Log.d("hello", "onresume");
+        new linkControl().sethtml(mcontext, true);
+        editor = mpreference.edit();
+        editor.putBoolean("getdata", true);
         editor.commit();
         super.onResume();
     }
