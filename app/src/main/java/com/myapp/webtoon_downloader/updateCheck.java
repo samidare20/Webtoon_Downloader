@@ -19,7 +19,7 @@ import java.util.List;
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
-public class  updateCheck extends BroadcastReceiver {
+public class updateCheck extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {

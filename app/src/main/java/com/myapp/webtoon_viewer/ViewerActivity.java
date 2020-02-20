@@ -41,6 +41,11 @@ public class ViewerActivity extends AppCompatActivity {
             } else {
                 t.setData(i.getPath());
                 t.setOnClickListener(v -> {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     field.removeAllViews();
                     nowPath = i.getPath();
                     filelist.clear();

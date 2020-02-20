@@ -29,10 +29,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Context mcontext = this;
-    private double backKeyPressedTime;
     SharedPreferences mpreference;
     SharedPreferences.Editor editor;
+    private Context mcontext = this;
+    private double backKeyPressedTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,12 +100,12 @@ public class MainActivity extends AppCompatActivity {
     void setTab() {//타일 설정
         if (!mpreference.getBoolean("getdata", false)) {
             Log.d("hello", "onif");
-            new linkControl().sethtml(mcontext, false);
+            new linkControl().sethtml(mcontext);
             editor = mpreference.edit();
             editor.putBoolean("getdata", true);
-            editor.commit();
+            editor.apply();
+            return;
         }
-        Log.d("mdg", "check");
         Handler mhandler = new Handler();
         new Thread(() -> {
             String[] names = new String[]{"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
             List<Room_Data> datalist;
 
             while (nameindex < 7) {
+                Log.d("mdg", "check");
                 int id = MainActivity.this.getResources().getIdentifier(names[nameindex] + "tabContent", "id", MainActivity.this.getPackageName());
                 LinearLayout layout = MainActivity.this.findViewById(id);
 
@@ -122,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < datalist.size(); i++) {
                     Room_Data data = datalist.get(i);
                     mhandler.post(() -> {
+                        Log.d("mdg", data.title);
                         WebtoonTiles tile = new WebtoonTiles(mcontext);
                         tile.setData(data.title, data.ThumbnailLink, data.EpisodeLink, data.bookmark);
                         layout.addView(tile);
@@ -131,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 nameindex++;
             }
         }).start();
+
     }
 
     void setDrawer() {
@@ -183,10 +186,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         Log.d("hello", "onresume");
-        new linkControl().sethtml(mcontext, true);
-        editor = mpreference.edit();
-        editor.putBoolean("getdata", true);
-        editor.commit();
+        new Thread(() -> {
+            new linkControl().sethtml(mcontext);
+        }).start();
         super.onResume();
     }
 }
