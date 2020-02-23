@@ -1,13 +1,17 @@
 package com.myapp.webtoon_downloader
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
+import com.google.android.material.navigation.NavigationView
+import com.myapp.bookmark.Bookmark
+import com.myapp.webtoon_viewer.ViewerActivity
 import kotlinx.android.synthetic.main.downloader_episode_main_content.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import org.jsoup.Jsoup
 
 class Episode : AppCompatActivity() {
@@ -17,18 +21,20 @@ class Episode : AppCompatActivity() {
         setContentView(R.layout.downloader_episode_main)
         val intent = intent.extras!!
         Glide.with(this).load(intent.getString("thumbnail")).into(episode_thumbnail)
+        setDrawer()
 
         init(intent)
     }
-    private fun init(intent:Bundle){
+
+    private fun init(intent: Bundle) {
         CoroutineScope(Dispatchers.Main).launch {
-            val link=intent.getString("link") + "&page="
+            val link = intent.getString("link") + "&page="
             var prev = ""
             var page = 1
             while (true) {
-                lateinit var doc:org.jsoup.nodes.Document
+                lateinit var doc: org.jsoup.nodes.Document
                 runBlocking {
-                    val job=CoroutineScope(Dispatchers.IO).launch {
+                    val job = CoroutineScope(Dispatchers.IO).launch {
                         doc = Jsoup.connect(link + page.toString()).get()
                     }
                     job.join()
@@ -68,5 +74,22 @@ class Episode : AppCompatActivity() {
                 page++
             }
         }
+    }
+
+    fun setDrawer() {
+        Thread(Runnable {
+            val navi = findViewById<NavigationView>(R.id.navi)
+            navi.setNavigationItemSelectedListener { item: MenuItem ->
+                val drawer = findViewById<DrawerLayout>(R.id.drawer)
+                drawer.closeDrawer(GravityCompat.START)
+                lateinit var intent: Intent
+                if (item.itemId == R.id.viewer)
+                    intent = Intent(this, ViewerActivity::class.java)
+                else if (item.itemId == R.id.bookmarklist)
+                    intent = Intent(this, Bookmark::class.java)
+                startActivity(intent)
+                true
+            }
+        }).start()
     }
 }
