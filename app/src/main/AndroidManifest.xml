@@ -35,6 +35,7 @@
         </activity>
         <activity android:name="com.myapp.webtoon_downloader.Episode" />
         <activity android:name="com.myapp.webtoon_viewer.ViewerActivity"/>
+        <activity android:name="com.myapp.bookmark.Bookmark"/>
     </application>
 
 </manifest>

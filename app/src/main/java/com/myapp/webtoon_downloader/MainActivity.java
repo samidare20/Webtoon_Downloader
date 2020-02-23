@@ -23,6 +23,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.myapp.bookmark.Bookmark;
 import com.myapp.webtoon_viewer.ViewerActivity;
 
 import java.util.List;
@@ -99,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
     void setTab() {//타일 설정
         if (!mpreference.getBoolean("getdata", false)) {
-            Log.d("hello", "onif");
             new linkControl().sethtml(mcontext);
             editor = mpreference.edit();
             editor.putBoolean("getdata", true);
@@ -140,12 +140,17 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navi = findViewById(R.id.navi);
 
         navi.setNavigationItemSelectedListener(item -> {
+            DrawerLayout drawer=findViewById(R.id.drawer);
+            drawer.closeDrawer(GravityCompat.START);
             if (item.getItemId() == R.id.viewer) {
-                DrawerLayout drawer = findViewById(R.id.drawer);
-                drawer.closeDrawer(GravityCompat.START);
                 Intent intent = new Intent(this, ViewerActivity.class);
                 startActivity(intent);
             }
+            else if(item.getItemId()==R.id.bookmarklist){
+                Intent intent = new Intent(this, Bookmark.class);
+                startActivity(intent);
+            }
+
             return true;
         });
     }
@@ -185,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-        Log.d("hello", "onresume");
         new Thread(() -> {
             new linkControl().sethtml(mcontext);
         }).start();
