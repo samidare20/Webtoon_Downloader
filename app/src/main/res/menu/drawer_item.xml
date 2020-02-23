@@ -4,4 +4,8 @@
     <item
         android:id="@+id/viewer"
         android:title="웹툰 뷰어"/>
+
+    <item
+        android:id="@+id/bookmarklist"
+        android:title="북마크"/>
 </menu>
