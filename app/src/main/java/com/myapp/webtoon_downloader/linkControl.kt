@@ -40,7 +40,7 @@ class linkControl {
     fun sethtml(context: Context) {
 
         // val a = text.split("<li>") //html을 <li>구분해서 분할(각 만화로 나누어짐)
-        var a = emptyList<String>()
+        lateinit var a:List<String>
         var thread = Thread(Runnable {
             val doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get()
             val text = doc.select("div.col_inner").toString()
@@ -56,7 +56,6 @@ class linkControl {
                 continue
             }
             val itemlist = itemList(i)//나눈 만화를 각각 itemlist에 넣어 저장
-            Log.d("mydebug", "${itemlist.title} ${itemlist.day}")
             thread = Thread(Runnable {
                 val db = Room_Database.getInstance(context)
                 if (db.Room_DAO().selectTitle(itemlist.title) == null) {

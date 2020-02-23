@@ -11,16 +11,18 @@ import kotlinx.coroutines.runBlocking
 import org.jsoup.Jsoup
 
 class Episode : AppCompatActivity() {
+    val mcontext = this
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.downloader_episode_main)
-        val mcontext = this
         val intent = intent.extras!!
         Glide.with(this).load(intent.getString("thumbnail")).into(episode_thumbnail)
-        comic_title.text = intent.getString("title")
 
+        init(intent)
+    }
+    private fun init(intent:Bundle){
         CoroutineScope(Dispatchers.Main).launch {
-            val link = intent.getString("link") + "&page="
+            val link=intent.getString("link") + "&page="
             var prev = ""
             var page = 1
             while (true) {
@@ -67,6 +69,4 @@ class Episode : AppCompatActivity() {
             }
         }
     }
-
-
 }
