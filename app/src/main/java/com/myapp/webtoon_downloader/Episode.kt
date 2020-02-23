@@ -1,12 +1,13 @@
 package com.myapp.webtoon_downloader
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.downloader_episode_main.*
+import kotlinx.android.synthetic.main.downloader_episode_main_content.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.jsoup.Jsoup
 
 class Episode : AppCompatActivity() {
@@ -18,24 +19,19 @@ class Episode : AppCompatActivity() {
         Glide.with(this).load(intent.getString("thumbnail")).into(episode_thumbnail)
         comic_title.text = intent.getString("title")
 
-        val handler = @SuppressLint("HandlerLeak")
-        object : Handler() {
-            override fun handleMessage(msg: Message) {
-                val episode = episodeTiles(mcontext)
-                var message = msg.obj.toString()
-                val title = message.substring(message.indexOf("-") + 1)
-                message = message.substring(0, message.indexOf("-"))
-
-                episode.setTile(title, message, intent.getString("title")!!)
-                episode_area.addView(episode)
-            }
-        }
-        Thread(Runnable {
+        CoroutineScope(Dispatchers.Main).launch {
             val link = intent.getString("link") + "&page="
             var prev = ""
             var page = 1
             while (true) {
-                val doc = Jsoup.connect(link + page.toString()).get()
+                lateinit var doc:org.jsoup.nodes.Document
+                runBlocking {
+                    val job=CoroutineScope(Dispatchers.IO).launch {
+                        doc = Jsoup.connect(link + page.toString()).get()
+                    }
+                    job.join()
+                }
+
                 val elements = doc.select("tbody").toString()
                 val html = elements.split("<tr>")
                 var end = false
@@ -61,17 +57,15 @@ class Episode : AppCompatActivity() {
                     } catch (e: Exception) {
                         continue
                     }
-
-                    val message = Message.obtain()
-
-                    message.obj = "$href-$title"
-                    handler.sendMessage(message)
+                    val episode = episodeTiles(mcontext)
+                    episode.setTile(title, href, intent.getString("title")!!)
+                    episode_area.addView(episode)
                 }
                 if (end)
                     break
                 page++
             }
-        }).start()
+        }
     }
 
 
