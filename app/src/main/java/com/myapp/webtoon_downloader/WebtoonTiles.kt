@@ -32,7 +32,6 @@ class WebtoonTiles constructor(
             val intent = Intent(context, Episode::class.java)
             intent.putExtra("link", comic)
             intent.putExtra("title", title)
-            intent.putExtra("thumbnail", thumblink)
             startActivity(context, intent, null)
         }
 

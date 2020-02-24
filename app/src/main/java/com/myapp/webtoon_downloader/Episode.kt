@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.myapp.bookmark.Bookmark
 import com.myapp.webtoon_viewer.ViewerActivity
-import kotlinx.android.synthetic.main.downloader_episode_main_content.*
+import kotlinx.android.synthetic.main.downloader_episode_main.*
 import kotlinx.coroutines.*
 import org.jsoup.Jsoup
 
@@ -20,8 +20,7 @@ class Episode : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.downloader_episode_main)
         val intent = intent.extras!!
-        Glide.with(this).load(intent.getString("thumbnail")).into(episode_thumbnail)
-        setDrawer()
+        comic_title.text = intent.getString("title")
         init(intent)
     }
 
@@ -79,22 +78,5 @@ class Episode : AppCompatActivity() {
                 page++
             }
         }
-    }
-
-    fun setDrawer() {
-        Thread(Runnable {
-            val navi = findViewById<NavigationView>(R.id.navi)
-            navi.setNavigationItemSelectedListener { item: MenuItem ->
-                val drawer = findViewById<DrawerLayout>(R.id.drawer)
-                drawer.closeDrawer(GravityCompat.START)
-                lateinit var intent: Intent
-                if (item.itemId == R.id.viewer)
-                    intent = Intent(this, ViewerActivity::class.java)
-                else if (item.itemId == R.id.bookmarklist)
-                    intent = Intent(this, Bookmark::class.java)
-                startActivity(intent)
-                true
-            }
-        }).start()
     }
 }
