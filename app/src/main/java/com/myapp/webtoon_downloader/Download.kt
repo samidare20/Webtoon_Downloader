@@ -17,6 +17,7 @@ import java.net.URL
 class Download(link: String, title: String, series: String, context: Context) {
     private var path = Environment.getExternalStorageDirectory().absolutePath.toString() + "/download/"
     private val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+    val id=(System.currentTimeMillis()/1000).toInt()
 
     init {
         object : Thread() {
@@ -53,7 +54,6 @@ class Download(link: String, title: String, series: String, context: Context) {
 
         var nowstring = ArrayList<String>()
         var index = 1
-
         for (i in html) {
             if (i.indexOf("title") != -1)
                 nowstring.add(i.substring(i.indexOf("src") + 5, i.indexOf("title") - 2))
@@ -65,7 +65,7 @@ class Download(link: String, title: String, series: String, context: Context) {
                 .setProgress(max, 0, false)
                 .setOngoing(true)
 
-        notificationManager.notify(1, notiBuilder.build())
+        notificationManager.notify(id, notiBuilder.build())
 
         for (i in nowstring) {
             Log.d("mydebug", i)
@@ -76,10 +76,8 @@ class Download(link: String, title: String, series: String, context: Context) {
             val filepath = "$path/$filename.jpg"
             val file = File(filepath)
             if (file.exists()) {
-                Log.d("mydebug", "exist file")
                 continue
             }
-            Log.d("mydebug", filepath)
 
             try {
                 val imageurl = URL(i)
@@ -108,16 +106,16 @@ class Download(link: String, title: String, series: String, context: Context) {
             }
             updateProgress(index, notiBuilder, max)
         }
-        notificationManager.cancel(1)
+        notificationManager.cancel(id)
         notiBuilder.setContentTitle(title)
         notiBuilder.setContentText(" 다운로드 완료")
         notiBuilder.setOngoing(false)
         notiBuilder.setGroup("1")
         notiBuilder.setProgress(0, 0, false)
-        notificationManager.notify(1, notiBuilder.build())
+        notificationManager.notify(id, notiBuilder.build())
         /*notificationManager.notify(2, notiBuilder.build())
         val summaryNotification = NotificationCompat.Builder(context, "1004")
-                .setContentTitle("webtoon_downloader")
+                .setContentTitle("webtoon_downloader"k)
                 //set content text to support devices running API level < 24
                 .setContentText("Two new messages")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -135,7 +133,7 @@ class Download(link: String, title: String, series: String, context: Context) {
     fun updateProgress(progress: Int, notification: NotificationCompat.Builder, size: Int) {
         notification.setProgress(size, progress, false)
         notification.setContentText("$progress/$size")
-        notificationManager.notify(1, notification.build())
+        notificationManager.notify(id, notification.build())
 
 
     }
