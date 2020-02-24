@@ -22,12 +22,11 @@ class Episode : AppCompatActivity() {
         val intent = intent.extras!!
         Glide.with(this).load(intent.getString("thumbnail")).into(episode_thumbnail)
         setDrawer()
-
         init(intent)
     }
 
     private fun init(intent: Bundle) {
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.Default).launch {
             val link = intent.getString("link") + "&page="
             var prev = ""
             var page = 1
@@ -65,9 +64,15 @@ class Episode : AppCompatActivity() {
                     } catch (e: Exception) {
                         continue
                     }
-                    val episode = episodeTiles(mcontext)
-                    episode.setTile(title, href, intent.getString("title")!!)
-                    episode_area.addView(episode)
+                    runBlocking {
+                        val job = CoroutineScope(Dispatchers.Main).launch {
+                            val episode = episodeTiles(mcontext)
+                            episode.setTile(title, href, intent.getString("title")!!)
+                            episode_area.addView(episode)
+                        }
+                        job.join()
+                    }
+
                 }
                 if (end)
                     break

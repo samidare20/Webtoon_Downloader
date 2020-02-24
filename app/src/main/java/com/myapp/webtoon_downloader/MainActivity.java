@@ -42,8 +42,14 @@ public class MainActivity extends AppCompatActivity {
         mpreference = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         new updateCheck().makeAlarm(this);
 
+        setTabhost();
+        setTab();
+        setDrawer();
+        makePermission();
+        createNotificationChannel();
+    }
 
-        ///tabhost 세팅
+    void setTabhost(){
         TabHost host = findViewById(R.id.host);
         host.setup();
         TabHost.TabSpec monspec = host.newTabSpec("montabScroll");
@@ -86,16 +92,10 @@ public class MainActivity extends AppCompatActivity {
             ScrollView view = findViewById(id);
             view.fullScroll(View.FOCUS_UP);
         });
-        setTab();
+
         Toolbar tb = findViewById(R.id.toolbar);
         tb.setTitle("웹툰 다운로더");
         setSupportActionBar(tb);
-        setDrawer();
-
-        makePermission();
-        createNotificationChannel();
-
-
     }
 
     void setTab() {//타일 설정
@@ -140,13 +140,12 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navi = findViewById(R.id.navi);
 
         navi.setNavigationItemSelectedListener(item -> {
-            DrawerLayout drawer=findViewById(R.id.drawer);
+            DrawerLayout drawer = findViewById(R.id.drawer);
             drawer.closeDrawer(GravityCompat.START);
             if (item.getItemId() == R.id.viewer) {
                 Intent intent = new Intent(this, ViewerActivity.class);
                 startActivity(intent);
-            }
-            else if(item.getItemId()==R.id.bookmarklist){
+            } else if (item.getItemId() == R.id.bookmarklist) {
                 Intent intent = new Intent(this, Bookmark.class);
                 startActivity(intent);
             }

@@ -1,7 +1,5 @@
 package com.myapp.webtoon_viewer
 
-import android.util.Log
-
 class imageItems(path: String, isImage: Boolean) : Comparable<imageItems> {
     var path = ""
     var number = -1
@@ -9,8 +7,10 @@ class imageItems(path: String, isImage: Boolean) : Comparable<imageItems> {
     init {
         this.path = path
         if (isImage) {
-            number = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf(".")).toInt()
-            Log.d("hello", number.toString())
+            try {
+                number = path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf(".")).toInt()
+            } catch (e: Exception) {
+            }
         }
     }
 

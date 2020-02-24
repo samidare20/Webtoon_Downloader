@@ -40,7 +40,7 @@ class linkControl {
     fun sethtml(context: Context) {
 
         // val a = text.split("<li>") //html을 <li>구분해서 분할(각 만화로 나누어짐)
-        lateinit var a:List<String>
+        lateinit var a: List<String>
         var thread = Thread(Runnable {
             val doc = Jsoup.connect("https://comic.naver.com/webtoon/weekday.nhn").get()
             val text = doc.select("div.col_inner").toString()
