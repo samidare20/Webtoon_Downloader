@@ -14,6 +14,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.myapp.bookmark.Bookmark;
+import com.myapp.webtoon_downloader.MainActivity;
 import com.myapp.webtoon_downloader.R;
 
 import java.io.File;
@@ -103,8 +104,8 @@ public class ViewerActivity extends AppCompatActivity {
         navi.setNavigationItemSelectedListener(item -> {
             DrawerLayout drawer = findViewById(R.id.drawer);
             drawer.closeDrawer(GravityCompat.START);
-            if (item.getItemId() == R.id.viewer) {
-                Intent intent = new Intent(this, ViewerActivity.class);
+            if (item.getItemId() == R.id.downloader) {
+                Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
             } else if (item.getItemId() == R.id.bookmarklist) {
                 Intent intent = new Intent(this, Bookmark.class);
