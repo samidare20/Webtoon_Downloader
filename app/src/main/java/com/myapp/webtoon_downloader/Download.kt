@@ -20,16 +20,13 @@ class Download(link: String, title: String, series: String, context: Context) {
     val id=(System.currentTimeMillis()/1000).toInt()
 
     init {
-        object : Thread() {
-            override fun run() {
-                super.run()
-                makefolder(title, series)
-                val doc = Jsoup.connect(link).get()
-                val element = doc.select("div.wt_viewer")
-                val html = element.toString().split(">")
-                download(html, context, title)
-            }
-        }.start()
+        Thread(Runnable {
+            makefolder(title, series)
+            val doc = Jsoup.connect(link).get()
+            val element = doc.select("div.wt_viewer")
+            val html = element.toString().split(">")
+            download(html, context, title)
+        }).start()
     }
 
 
@@ -52,7 +49,7 @@ class Download(link: String, title: String, series: String, context: Context) {
 
     private fun download(html: List<String>, context: Context, title: String) {
 
-        var nowstring = ArrayList<String>()
+        val nowstring = ArrayList<String>()
         var index = 1
         for (i in html) {
             if (i.indexOf("title") != -1)
@@ -68,7 +65,6 @@ class Download(link: String, title: String, series: String, context: Context) {
         notificationManager.notify(id, notiBuilder.build())
 
         for (i in nowstring) {
-            Log.d("mydebug", i)
 
             val filename = index.toString()
             index++
