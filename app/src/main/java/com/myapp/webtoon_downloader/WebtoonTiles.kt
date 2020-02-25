@@ -24,14 +24,12 @@ class WebtoonTiles constructor(
         try {
             Glide.with(context).load(thumblink).into(thumbnail)
         } catch (e: Exception) {
-            //Log.d("mydebug", e.toString())
-            Log.d("mydebug", "glide error")
-            Log.d("mydebug", thumbnail.toString())
         }
         this.setOnClickListener {
             val intent = Intent(context, Episode::class.java)
             intent.putExtra("link", comic)
             intent.putExtra("title", title)
+            intent.putExtra("thumbnail",thumblink)
             startActivity(context, intent, null)
         }
 

@@ -21,6 +21,7 @@ class Episode : AppCompatActivity() {
         setContentView(R.layout.downloader_episode_main)
         val intent = intent.extras!!
         comic_title.text = intent.getString("title")
+        Glide.with(this).load(intent.getString("thumbnail")).into(thumbnail)
         init(intent)
     }
 
