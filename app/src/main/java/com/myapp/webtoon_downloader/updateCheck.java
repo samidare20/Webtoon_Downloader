@@ -26,7 +26,6 @@ public class updateCheck extends BroadcastReceiver {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo network = manager.getActiveNetworkInfo();
         if (network == null || !network.isConnected() || network.getType() != ConnectivityManager.TYPE_WIFI) {
-            Log.d("hello", "no network");
             makeAlarm(context);
             return;
         }
@@ -65,7 +64,6 @@ public class updateCheck extends BroadcastReceiver {
                 }
             }
         } catch (Exception e) {
-            Log.d("hello", e.toString());
         }
     }
 
