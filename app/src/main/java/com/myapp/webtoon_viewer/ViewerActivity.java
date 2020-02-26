@@ -9,12 +9,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.myapp.bookmark.Bookmark;
-import com.myapp.webtoon_downloader.MainActivity;
 import com.myapp.webtoon_downloader.R;
 
 import java.io.File;
@@ -31,6 +31,9 @@ public class ViewerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewer_activity_main);
+        Toolbar tb = findViewById(R.id.toolbar);
+        tb.setTitle("웹툰 뷰어");
+        setSupportActionBar(tb);
         makelist();
         setDrawer();
     }
@@ -105,11 +108,11 @@ public class ViewerActivity extends AppCompatActivity {
             DrawerLayout drawer = findViewById(R.id.drawer);
             drawer.closeDrawer(GravityCompat.START);
             if (item.getItemId() == R.id.downloader) {
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                finish();
             } else if (item.getItemId() == R.id.bookmarklist) {
                 Intent intent = new Intent(this, Bookmark.class);
                 startActivity(intent);
+                finish();
             }
 
             return true;

@@ -63,7 +63,7 @@ public class updateCheck extends BroadcastReceiver {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

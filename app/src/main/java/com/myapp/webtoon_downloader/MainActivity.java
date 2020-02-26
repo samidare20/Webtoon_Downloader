@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -114,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
             List<Room_Data> datalist;
 
             while (nameindex < 7) {
-                Log.d("mdg", "check");
                 int id = MainActivity.this.getResources().getIdentifier(names[nameindex] + "tabContent", "id", MainActivity.this.getPackageName());
                 LinearLayout layout = MainActivity.this.findViewById(id);
 
@@ -123,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < datalist.size(); i++) {
                     Room_Data data = datalist.get(i);
                     mhandler.post(() -> {
-                        Log.d("mdg", data.title);
                         WebtoonTiles tile = new WebtoonTiles(mcontext);
                         tile.setData(data.title, data.ThumbnailLink, data.EpisodeLink, data.bookmark);
                         layout.addView(tile);

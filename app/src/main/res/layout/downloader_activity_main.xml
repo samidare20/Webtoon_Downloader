@@ -11,7 +11,7 @@
     tools:openDrawer="start">
 
     <include
-        layout="@layout/downloader_main_contents"
+        layout="@layout/downloader_activity_main_contents"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

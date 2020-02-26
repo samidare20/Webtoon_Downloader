@@ -2,7 +2,6 @@ package com.myapp.webtoon_downloader
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat.startActivity
@@ -24,6 +23,7 @@ class WebtoonTiles constructor(
         try {
             Glide.with(context).load(thumblink).into(thumbnail)
         } catch (e: Exception) {
+            print("Glide error : $e")
         }
         this.setOnClickListener {
             val intent = Intent(context, Episode::class.java)
