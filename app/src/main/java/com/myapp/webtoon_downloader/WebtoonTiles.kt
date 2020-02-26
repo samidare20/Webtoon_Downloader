@@ -7,6 +7,9 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat.startActivity
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.downloader_webtoon_tiles.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class WebtoonTiles constructor(
         context: Context
@@ -14,12 +17,12 @@ class WebtoonTiles constructor(
     init {
         LayoutInflater.from(context).inflate(R.layout.downloader_webtoon_tiles, this, true)
     }
-
+    var title=""
     fun setData(title: String, thumblink: String, comic: String, mbookmark: Boolean) {
         titlename.text = title
         bookmark.isSelected = mbookmark
         val db = Room_Database.getInstance(context)
-
+        this.title=title
         try {
             Glide.with(context).load(thumblink).into(thumbnail)
         } catch (e: Exception) {
@@ -34,12 +37,12 @@ class WebtoonTiles constructor(
         }
 
         bookmark.setOnClickListener {
-            Thread(Runnable {
+            CoroutineScope(Dispatchers.Default).launch {
                 bookmark.isSelected = !bookmark.isSelected
                 val data = db.Room_DAO().selectTitle(title)
                 data.bookmark = bookmark.isSelected
                 db.Room_DAO().update(data)
-            }).start()
+            }
         }
     }
 }
