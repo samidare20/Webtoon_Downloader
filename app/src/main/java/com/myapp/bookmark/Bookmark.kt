@@ -10,19 +10,16 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.myapp.webtoon_downloader.R
 import com.myapp.webtoon_downloader.Room_Database
-import com.myapp.webtoon_downloader.WebtoonTiles
 import com.myapp.webtoon_downloader.contextManager
 import com.myapp.webtoon_viewer.ViewerActivity
 import kotlinx.android.synthetic.main.bookmark_main_contents.*
-import kotlinx.android.synthetic.main.downloader_webtoon_tiles.*
-import kotlinx.android.synthetic.main.downloader_webtoon_tiles.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class Bookmark : AppCompatActivity() {
-    val mcontext=this
+    val mcontext=contextManager().getContext()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.bookmark_activity_main)
@@ -33,27 +30,18 @@ class Bookmark : AppCompatActivity() {
         setDrawer()
     }
     fun setField(){
-        val mcontext=contextManager().getContext()
+
         CoroutineScope(Dispatchers.Default).launch {
             val db=Room_Database.getInstance(mcontext)
             val list=db.Room_DAO().selectBookmark()
             val layout=bookmarkField
             for(i in list){
-                val tile=WebtoonTiles(mcontext)
+                val tile= BookmarkTiles(this@Bookmark)
                 runBlocking {
                     val job=CoroutineScope(Dispatchers.Main).launch {
                         tile.setData(i.title,i.ThumbnailLink,i.EpisodeLink,true)
                         layout.addView(tile)
                         tile.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-
-                        tile.bookmark.setOnClickListener {
-                            /*CoroutineScope(Dispatchers.Default).launch {
-                                bookmark.isSelected = false
-                                val data = db.Room_DAO().selectTitle(tile.title)
-                                data.bookmark = false
-                                db.Room_DAO().update(data)
-                            }*/
-                        }
                     }
                     job.join()
                 }
