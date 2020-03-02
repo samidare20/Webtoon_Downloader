@@ -39,7 +39,7 @@ class Bookmark : AppCompatActivity() {
                 val tile= BookmarkTiles(this@Bookmark)
                 runBlocking {
                     val job=CoroutineScope(Dispatchers.Main).launch {
-                        tile.setData(i.title,i.ThumbnailLink,i.EpisodeLink,true)
+                        tile.setData(i.title,i.ThumbnailLink,i.EpisodeLink)
                         layout.addView(tile)
                         tile.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
                     }

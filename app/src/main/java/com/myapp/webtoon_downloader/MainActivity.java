@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -16,6 +17,7 @@ import android.widget.ScrollView;
 import android.widget.TabHost;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -25,6 +27,10 @@ import com.google.android.material.navigation.NavigationView;
 import com.myapp.bookmark.Bookmark;
 import com.myapp.webtoon_viewer.ViewerActivity;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -123,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
                     mhandler.post(() -> {
                         WebtoonTiles tile = new WebtoonTiles(mcontext);
                         tile.setData(data.title, data.ThumbnailLink, data.EpisodeLink, data.bookmark);
+
+                        //tile.setId();
                         layout.addView(tile);
                         tile.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
                     });

@@ -1,25 +1,30 @@
 package com.myapp.bookmark
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat.startActivity
 import com.bumptech.glide.Glide
-import com.myapp.webtoon_downloader.Episode
-import com.myapp.webtoon_downloader.R
-import com.myapp.webtoon_downloader.Room_Database
-import com.myapp.webtoon_downloader.contextManager
+import com.myapp.webtoon_downloader.*
 import kotlinx.android.synthetic.main.bookmark_tiles.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class BookmarkTiles constructor(
         context: Context
 ) : LinearLayout(context) {
     init {
         LayoutInflater.from(context).inflate(R.layout.bookmark_tiles, this, true)
+
     }
     var title=""
-    fun setData(title: String, thumblink: String, comic: String, mbookmark: Boolean) {
+    fun setData(title: String, thumblink: String, comic: String) {
+        val maincontext=contextManager().getContext()
         titlename.text = title
         val db = Room_Database.getInstance(contextManager().getContext())
         this.title=title
@@ -36,7 +41,18 @@ class BookmarkTiles constructor(
             startActivity(context, intent, null)
         }
         this.setOnLongClickListener {
-
+            val builder=AlertDialog.Builder(context)
+            builder.setTitle("북마크에서 제거하시겠습니까?")
+            builder.setPositiveButton("예") { DialogInterface, i: Int ->
+                CoroutineScope(Dispatchers.Default).launch {
+                    val db=Room_Database.getInstance(maincontext)
+                    val data=db.Room_DAO().selectTitle(title)
+                    data.bookmark=false
+                    db.Room_DAO().update(data)
+                }
+            }
+            builder.setNeutralButton("아니오",null)
+            builder.create().show()
             true
         }
     }
