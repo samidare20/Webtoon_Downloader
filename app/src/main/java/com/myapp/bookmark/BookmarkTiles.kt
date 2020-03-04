@@ -2,15 +2,15 @@ package com.myapp.bookmark
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat.startActivity
 import com.bumptech.glide.Glide
 import com.myapp.webtoon_downloader.*
-import kotlinx.android.synthetic.main.bookmark_tiles.view.*
+import kotlinx.android.synthetic.main.bookmark_tiles.view.thumbnail
+import kotlinx.android.synthetic.main.bookmark_tiles.view.titlename
+import kotlinx.android.synthetic.main.downloader_webtoon_tiles.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,11 +44,23 @@ class BookmarkTiles constructor(
             val builder=AlertDialog.Builder(context)
             builder.setTitle("북마크에서 제거하시겠습니까?")
             builder.setPositiveButton("예") { DialogInterface, i: Int ->
+                lateinit var db:Room_Database
+                lateinit var data:Room_Data
+                var id=-1
                 CoroutineScope(Dispatchers.Default).launch {
-                    val db=Room_Database.getInstance(maincontext)
-                    val data=db.Room_DAO().selectTitle(title)
-                    data.bookmark=false
+                    db = Room_Database.getInstance(maincontext)
+                    data = db.Room_DAO().selectTitle(title)
+                    data.bookmark = false
                     db.Room_DAO().update(data)
+                    id=data.id
+                }
+                val tile=findViewById<WebtoonTiles>(id)
+                try {
+                    tile.bookmark.isSelected = false
+                }
+                catch (E:java.lang.Exception)
+                {
+                    print(E)
                 }
             }
             builder.setNeutralButton("아니오",null)

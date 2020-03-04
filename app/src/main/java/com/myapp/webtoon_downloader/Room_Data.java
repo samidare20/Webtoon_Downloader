@@ -12,5 +12,5 @@ public class Room_Data {
     public String update;
     public boolean bookmark;
     @PrimaryKey(autoGenerate = true)
-    int id;
+    public int id;
 }
