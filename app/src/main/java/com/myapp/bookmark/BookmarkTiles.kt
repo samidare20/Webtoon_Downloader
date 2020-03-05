@@ -51,8 +51,8 @@ class BookmarkTiles constructor(
                     db = Room_Database.getInstance(maincontext)
                     data = db.Room_DAO().selectTitle(title)
                     data.bookmark = false
-                    db.Room_DAO().update(data)
                     id=data.id
+                    db.Room_DAO().update(data)
                 }
                 val tile=findViewById<WebtoonTiles>(id)
                 try {
