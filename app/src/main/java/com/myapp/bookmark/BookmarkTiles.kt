@@ -3,6 +3,7 @@ package com.myapp.bookmark
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat.startActivity
@@ -52,9 +53,10 @@ class BookmarkTiles constructor(
                     data = db.Room_DAO().selectTitle(title)
                     data.bookmark = false
                     id=data.id
+                    Log.d("mdg","$title + ${id+0x8000}")
                     db.Room_DAO().update(data)
                 }
-                val tile=findViewById<WebtoonTiles>(id)
+                val tile=findViewById<WebtoonTiles>(0x8000+id)
                 try {
                     tile.bookmark.isSelected = false
                 }

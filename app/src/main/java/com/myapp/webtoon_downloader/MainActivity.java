@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
@@ -123,8 +125,14 @@ public class MainActivity extends AppCompatActivity {
                     mhandler.post(() -> {
                         WebtoonTiles tile = new WebtoonTiles(mcontext);
                         tile.setData(data.title, data.ThumbnailLink, data.EpisodeLink, data.bookmark);
-                        tile.setId(data.id);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                            View.generateViewId();
+                        else
+                            ViewCompat.generateViewId();
+                        tile.setId(0x8000+data.id);
+
                         layout.addView(tile);
+                        Log.d("mdg",data.title+(0x8000+data.id));
                         tile.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
                     });
                 }
