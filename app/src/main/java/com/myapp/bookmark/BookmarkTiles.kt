@@ -1,5 +1,6 @@
 package com.myapp.bookmark
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -9,9 +10,7 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat.startActivity
 import com.bumptech.glide.Glide
 import com.myapp.webtoon_downloader.*
-import kotlinx.android.synthetic.main.bookmark_tiles.view.thumbnail
-import kotlinx.android.synthetic.main.bookmark_tiles.view.titlename
-import kotlinx.android.synthetic.main.downloader_webtoon_tiles.view.*
+import kotlinx.android.synthetic.main.bookmark_tiles.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,15 +18,15 @@ import kotlinx.coroutines.launch
 class BookmarkTiles constructor(
         context: Context
 ) : LinearLayout(context) {
+
     init {
         LayoutInflater.from(context).inflate(R.layout.bookmark_tiles, this, true)
-
     }
     var title=""
     fun setData(title: String, thumblink: String, comic: String) {
         val maincontext=contextManager().getContext()
         titlename.text = title
-        val db = Room_Database.getInstance(contextManager().getContext())
+        val db = Room_Database.getInstance(maincontext)
         this.title=title
         try {
             Glide.with(context).load(thumblink).into(thumbnail)
@@ -45,25 +44,17 @@ class BookmarkTiles constructor(
             val builder=AlertDialog.Builder(context)
             builder.setTitle("북마크에서 제거하시겠습니까?")
             builder.setPositiveButton("예") { DialogInterface, i: Int ->
-                lateinit var db:Room_Database
-                lateinit var data:Room_Data
                 var id=-1
                 CoroutineScope(Dispatchers.Default).launch {
-                    db = Room_Database.getInstance(maincontext)
-                    data = db.Room_DAO().selectTitle(title)
-                    data.bookmark = false
+                    val db = Room_Database.getInstance(maincontext)
+                    val data = db.Room_DAO().selectTitle(title)
                     id=data.id
-                    Log.d("mdg","$title + ${id+0x8000}")
-                    db.Room_DAO().update(data)
+                    Log.d("mdg","bookmark : ${0x8000+id}")
                 }
-                val tile=findViewById<WebtoonTiles>(0x8000+id)
-                try {
-                    tile.bookmark.isSelected = false
-                }
-                catch (E:java.lang.Exception)
-                {
-                    print(E)
-                }
+                //val inflater:LayoutInflater= LayoutInflater.from(main)
+                //val view = inflater.inflate(R.layout.downloader_activity_main_contents, null);
+                val tile=(maincontext as Activity).findViewById<WebtoonTiles>(0x8000+id)
+                tile.Offbookmark()
             }
             builder.setNeutralButton("아니오",null)
             builder.create().show()

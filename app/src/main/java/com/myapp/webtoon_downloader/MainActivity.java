@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
                         layout.addView(tile);
                         Log.d("mdg",data.title+(0x8000+data.id));
+                   //     tile.Offbookmark();
                         tile.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
                     });
                 }
@@ -198,6 +199,8 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> {
             new linkControl().sethtml(mcontext);
         }).start();
+        WebtoonTiles tile=findViewById(0x8000+1);
+
         super.onResume();
     }
 }
