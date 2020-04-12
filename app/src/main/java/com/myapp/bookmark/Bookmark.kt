@@ -6,17 +6,15 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
 import com.myapp.webtoon_downloader.R
 import com.myapp.webtoon_downloader.Room_Database
 import com.myapp.webtoon_downloader.contextManager
 import com.myapp.webtoon_viewer.ViewerActivity
+import kotlinx.android.synthetic.main.bookmark_activity_main.*
 import kotlinx.android.synthetic.main.bookmark_main_contents.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class Bookmark : AppCompatActivity() {
     val mcontext=contextManager().getContext()
@@ -37,21 +35,16 @@ class Bookmark : AppCompatActivity() {
             val layout=bookmarkField
             for(i in list){
                 val tile= BookmarkTiles(this@Bookmark)
-                runBlocking {
-                    val job=CoroutineScope(Dispatchers.Main).launch {
-                        tile.setData(i.title,i.ThumbnailLink,i.EpisodeLink)
-                        layout.addView(tile)
-                        tile.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-                    }
-                    job.join()
-                }
+                tile.setData(i.title,i.ThumbnailLink,i.EpisodeLink,mcontext)
+                layout.addView(tile)
+                tile.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
             }
         }
     }
     fun setDrawer() {
-        val navi = findViewById<NavigationView>(R.id.navi)
+        val navi = navi
         navi.setNavigationItemSelectedListener { item: MenuItem ->
-            val drawer = findViewById<DrawerLayout>(R.id.drawer)
+            val drawer = drawer
             drawer.closeDrawer(GravityCompat.START)
             if (item.itemId == R.id.downloader) {
                 finish()

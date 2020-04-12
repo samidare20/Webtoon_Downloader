@@ -1,11 +1,9 @@
 package com.myapp.webtoon_viewer;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
-import android.widget.ImageView;
+import android.util.Log;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,10 +21,10 @@ import java.util.Collections;
 
 
 public class ViewerActivity extends AppCompatActivity {
-    String rootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-    String nowPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-    ArrayList<imageItems> filelist = new ArrayList<>();
 
+    String rootPath=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+    String nowPath=rootPath;
+    ArrayList<imageItems> filelist = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,52 +32,38 @@ public class ViewerActivity extends AppCompatActivity {
         Toolbar tb = findViewById(R.id.toolbar);
         tb.setTitle("웹툰 뷰어");
         setSupportActionBar(tb);
-        makelist();
         setDrawer();
     }
 
     private void makelist() {
+        Log.d("mdg",nowPath);
         getFileList();
+        ArrayList<fileTiles> makinglist=new ArrayList<>();
         LinearLayout field = findViewById(R.id.fileField);
         for (imageItems i : filelist) {
-
             if (i.getNumber() != -1) {
+                Intent intent = new Intent(this, imageViewer.class);
+                intent.putExtra("path",nowPath);
                 new Thread(() -> {
-                    makeImagewindow(field);
+                    startActivity(intent);
                 }).start();
-                break;
-            } else {
-                fileTiles t = new fileTiles(this);
-                t.setData(i.getPath());
-                t.setOnClickListener(v -> {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    field.removeAllViews();
-                    nowPath = i.getPath();
-                    filelist.clear();
-                    makelist();
-                });
-                field.addView(t);
+                nowPath=nowPath.substring(0,nowPath.lastIndexOf("/")+1);
+                return;
             }
+            fileTiles t = new fileTiles(this);
+            t.setData(i.getPath());
+            t.setOnClickListener(v -> {
+                nowPath = i.getPath();
+                filelist.clear();
+                makelist();
+            });
+            makinglist.add(t);
         }
+        field.removeAllViews();
+        for (fileTiles i : makinglist)
+            field.addView(i);
     }
 
-    private void makeImagewindow(LinearLayout field) {
-        for (imageItems i : filelist) {
-            if (i.getNumber() != -1) {
-                ImageView image = new ImageView(this);
-                File file = new File(i.getPath());
-                Bitmap bm = BitmapFactory.decodeFile(file.getAbsolutePath());
-                image.setImageBitmap(bm);
-                runOnUiThread(() -> {
-                    field.addView(image);
-                });
-            }
-        }
-    }
 
     private void getFileList() {
         File fileList = new File(nowPath);
@@ -99,6 +83,8 @@ public class ViewerActivity extends AppCompatActivity {
             }
         }
         Collections.sort(filelist);
+        for(int i=0;i<filelist.size();i++)
+            Log.d("yee",filelist.get(i).getPath());
     }
 
     void setDrawer() {
@@ -121,13 +107,19 @@ public class ViewerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!rootPath.equals(nowPath)) {
-            nowPath = nowPath.substring(0, nowPath.lastIndexOf("/"));
-            LinearLayout field = findViewById(R.id.fileField);
-            field.removeAllViews();
-            filelist.clear();
-            makelist();
-        } else
-            super.onBackPressed();
+        if(rootPath.equals(nowPath))
+            return;
+
+        nowPath = nowPath.substring(0, nowPath.lastIndexOf("/"));
+        LinearLayout field = findViewById(R.id.fileField);
+        field.removeAllViews();
+        filelist.clear();
+        makelist();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        makelist();
     }
 }

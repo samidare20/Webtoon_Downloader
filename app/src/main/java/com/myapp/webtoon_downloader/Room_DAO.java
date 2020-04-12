@@ -24,6 +24,9 @@ public interface Room_DAO {
     @Query("SELECT * FROM Room_Data WHERE bookmark")
     List<Room_Data> selectBookmark();
 
+    @Query("SELECT * FROM Room_Data WHERE id=:id")
+    Room_Data selectId(int id);
+
     @Update
     void update(Room_Data data);
 }

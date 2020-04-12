@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,28 +19,33 @@ import android.widget.ScrollView;
 import android.widget.TabHost;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.myapp.bookmark.Bookmark;
+import com.myapp.bookmark.BookmarkTiles;
 import com.myapp.webtoon_viewer.ViewerActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     SharedPreferences mpreference;
     SharedPreferences.Editor editor;
+    ArrayList<ArrayList<Integer>> webtoonList = new ArrayList<>();
     private Context mcontext = this;
     private double backKeyPressedTime;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("mdg", getPackageName());
         setContentView(R.layout.downloader_activity_main);
         mpreference = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         new updateCheck().makeAlarm(this);
@@ -50,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
     }
 
-    void setTabhost(){
+    void setTabhost() {
         TabHost host = findViewById(R.id.host);
         host.setup();
         TabHost.TabSpec monspec = host.newTabSpec("montabScroll");
@@ -92,6 +99,51 @@ public class MainActivity extends AppCompatActivity {
             int id = MainActivity.this.getResources().getIdentifier(tabId, "id", MainActivity.this.getPackageName());
             ScrollView view = findViewById(id);
             view.fullScroll(View.FOCUS_UP);
+            Log.d("mdg", tabId);
+            new Thread(() -> {
+                int index = 0;
+                switch (tabId) {
+                    case "montabScroll":
+                        index = 0;
+                        break;
+                    case "tuetabScroll":
+                        index = 1;
+                        break;
+                    case "wedtabScroll":
+                        index = 2;
+                        break;
+                    case "thutabScroll":
+                        index = 3;
+                        break;
+                    case "fritabScroll":
+                        index = 4;
+                        break;
+                    case "sattabScroll":
+                        index = 5;
+                        break;
+                    case "suntabScroll":
+                        index = 6;
+                        break;
+                }
+                ArrayList<Integer> list = webtoonList.get(index);
+                try {
+                    for (int i = 0; i < list.size(); i++) {
+                        Room_Database db = Room_Database.getInstance(mcontext);
+                        boolean data = db.Room_DAO().selectId(list.get(i)).bookmark;
+                        BookmarkTiles tile = findViewById(list.get(i));
+                        View bookmark = tile.findViewById(R.id.bookmark);
+
+                        Log.d("mdg", tile.getTitle() + data);
+                        runOnUiThread(() -> {
+                            bookmark.setSelected(data);
+                        });
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("it's wrong");
+                }
+
+            }).start();
         });
 
         Toolbar tb = findViewById(R.id.toolbar);
@@ -117,27 +169,22 @@ public class MainActivity extends AppCompatActivity {
             while (nameindex < 7) {
                 int id = MainActivity.this.getResources().getIdentifier(names[nameindex] + "tabContent", "id", MainActivity.this.getPackageName());
                 LinearLayout layout = MainActivity.this.findViewById(id);
-
                 datalist = db.Room_DAO().selectDay(names[nameindex]);
-
+                ArrayList<Integer> a = new ArrayList<>();
                 for (int i = 0; i < datalist.size(); i++) {
                     Room_Data data = datalist.get(i);
                     mhandler.post(() -> {
                         WebtoonTiles tile = new WebtoonTiles(mcontext);
                         tile.setData(data.title, data.ThumbnailLink, data.EpisodeLink, data.bookmark);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                            View.generateViewId();
-                        else
-                            ViewCompat.generateViewId();
-                        tile.setId(0x8000+data.id);
-
+                        tile.setId(0x8000 + data.id);
                         layout.addView(tile);
-                        Log.d("mdg",data.title+(0x8000+data.id));
-                   //     tile.Offbookmark();
+                        a.add(0x8000 + data.id);
                         tile.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
                     });
                 }
                 nameindex++;
+                webtoonList.add(a);
+
             }
         }).start();
 
@@ -168,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createNotificationChannel() {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("1004", "yee", NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -196,11 +244,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
+        super.onResume();
+        ConnectivityManager manager = (ConnectivityManager) mcontext.getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo network = manager.getActiveNetworkInfo();
+        if (network == null || !network.isConnected() || network.getType() != ConnectivityManager.TYPE_WIFI) {
+            return;
+        }
         new Thread(() -> {
             new linkControl().sethtml(mcontext);
         }).start();
-        WebtoonTiles tile=findViewById(0x8000+1);
-
-        super.onResume();
     }
 }

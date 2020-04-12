@@ -1,8 +1,10 @@
 package com.myapp.webtoon_downloader
 
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
+import android.content.Intent
 import android.os.Environment
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -14,25 +16,32 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 
-class Download(link: String, title: String, series: String, context: Context) {
+class Download(val link: String, val title: String, val series: String, val context: Context) {
     private var path = Environment.getExternalStorageDirectory().absolutePath.toString() + "/download/"
     private val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-    val id=(System.currentTimeMillis()/1000).toInt()
+    lateinit var html:List<String>
+    val id = (System.currentTimeMillis() / 1000).toInt()
 
     init {
+        Log.d("mdg","class check")
         Thread(Runnable {
-            makefolder(title, series)
+            makefolder()
             val doc = Jsoup.connect(link).get()
             val element = doc.select("div.wt_viewer")
-            val html = element.toString().split(">")
-            download(html, context, title)
+            html = element.toString().split(">")
+            download()
         }).start()
     }
 
 
-    private fun makefolder(title: String, series: String) {
-        path += "Webtoon"
+    private fun makefolder() {
+
         var folder = File(path)
+        if (!folder.exists())
+            folder.mkdir()
+
+        path += "Webtoon"
+        folder = File(path)
         if (!folder.exists())
             folder.mkdir()
 
@@ -47,28 +56,30 @@ class Download(link: String, title: String, series: String, context: Context) {
             folder.mkdir()
     }
 
-    private fun download(html: List<String>, context: Context, title: String) {
+    fun download() {
 
         val nowstring = ArrayList<String>()
-        var index = 1
-        for (i in html) {
+        var index=1
+        for(i in html){
             if (i.indexOf("title") != -1)
                 nowstring.add(i.substring(i.indexOf("src") + 5, i.indexOf("title") - 2))
         }
         val max = nowstring.size + 1
         val notiBuilder = NotificationCompat.Builder(context, "1004")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("$title 다운로드 중...")
+                .setContentTitle("$series - $title ")
                 .setProgress(max, 0, false)
                 .setOngoing(true)
+                .setStyle(NotificationCompat.BigTextStyle())
 
         notificationManager.notify(id, notiBuilder.build())
+
+
 
         for (i in nowstring) {
 
             val filename = index.toString()
             index++
-
             val filepath = "$path/$filename.jpg"
             val file = File(filepath)
             if (file.exists()) {
@@ -98,30 +109,39 @@ class Download(link: String, title: String, series: String, context: Context) {
                 input.close()
                 fos.close()
             } catch (e: java.lang.Exception) {
-                Log.d("mydebug", e.toString())
+                notificationManager.cancel(id)
+                notiBuilder.setContentText("다운로드가 일시중지됨")
+                notiBuilder.setOngoing(false)
+                notiBuilder.setProgress(0, 1, true)
+                notificationManager.notify(id,notiBuilder.build())
+
+
+                var pendingIntent: PendingIntent
+                val mintent = Intent(context, notiRestartEvent::class.java)
+                mintent.putExtra("index",index-1)
+                mintent.putExtra("id", id)
+                mintent.putExtra("title", title)
+                mintent.putExtra("path", path)
+                mintent.putExtra("link",link)
+                mintent.putExtra("series",series)
+
+                pendingIntent = PendingIntent.getBroadcast(context, 1, mintent, PendingIntent.FLAG_UPDATE_CURRENT)
+                notiBuilder.addAction(R.drawable.ic_launcher_background, "재시작", pendingIntent)
+
+                pendingIntent = PendingIntent.getBroadcast(context, 1, mintent, PendingIntent.FLAG_UPDATE_CURRENT)
+                notiBuilder.addAction(R.drawable.ic_launcher_background, "취소", pendingIntent)
+                notificationManager.notify(id, notiBuilder.build())
+                return
             }
             updateProgress(index, notiBuilder, max)
         }
         notificationManager.cancel(id)
-        notiBuilder.setContentTitle(title)
+        notiBuilder.setContentTitle("$series - $title")
         notiBuilder.setContentText(" 다운로드 완료")
         notiBuilder.setOngoing(false)
-        notiBuilder.setGroup("1")
         notiBuilder.setProgress(0, 0, false)
+
         notificationManager.notify(id, notiBuilder.build())
-        /*notificationManager.notify(2, notiBuilder.build())
-        val summaryNotification = NotificationCompat.Builder(context, "1004")
-                .setContentTitle("webtoon_downloader"k)
-                //set content text to support devices running API level < 24
-                .setContentText("Two new messages")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                //specify which group this notification belongs to
-                .setGroup("1")
-                //set this notification as the summary for the group
-                .setGroupSummary(true)
-                .build()
-        notificationManager.notify(0, summaryNotification)
-        */
 
     }
 
@@ -134,3 +154,11 @@ class Download(link: String, title: String, series: String, context: Context) {
 
     }
 }
+
+/*
+todo  다운로드 실패시 재시도
+1)다운로드를 일시정지함
+2)크롬과 같이 <재시작> 과 <취소> 선택지를 제시 O
+3)재시작을 누르면 실패한 번호의 이미지 제거 후 그곳부터 다운로드 시작
+4)취소를 누르면 폴더째로 삭제 O
+*/

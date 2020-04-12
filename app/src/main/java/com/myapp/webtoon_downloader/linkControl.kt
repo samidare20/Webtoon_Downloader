@@ -49,6 +49,7 @@ class linkControl {
         thread.start()
         thread.join()
 
+
         var firstCheck = true
         for (i in a) {
             if (firstCheck) {
