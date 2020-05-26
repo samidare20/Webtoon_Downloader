@@ -16,7 +16,7 @@ import org.jsoup.Jsoup
 
 class Episode : AppCompatActivity() {
     val mcontext = this
-    lateinit var mintent :Bundle
+    lateinit var mintent: Bundle
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +35,7 @@ class Episode : AppCompatActivity() {
             val link = mintent.getString("link") + "&page="
             var prev = ""
             var page = 1
-            var destroy=false
+            var destroy = false
             while (true) {
                 lateinit var doc: org.jsoup.nodes.Document
                 runBlocking {
@@ -43,7 +43,7 @@ class Episode : AppCompatActivity() {
                         try {
                             doc = Jsoup.connect(link + page.toString()).get()
                         } catch (e: java.lang.Exception) {
-                            destroy=true
+                            destroy = true
                             return@launch
                         }
                     }
@@ -51,12 +51,12 @@ class Episode : AppCompatActivity() {
                         return@runBlocking
                     job.join()
                 }
-                if(destroy) {
+                if (destroy) {
                     runOnUiThread {
                         val mToast = Toast.makeText(applicationContext, "인터넷이 연결되지 않았습니다.", Toast.LENGTH_LONG)
                         mToast.show()
-                        val restartButton=Button(mcontext)
-                        restartButton.text="재시도"
+                        val restartButton = Button(mcontext)
+                        restartButton.text = "재시도"
                         restartButton.setOnClickListener {
                             episode_area.removeAllViews()
                             init()

@@ -2,7 +2,6 @@ package com.myapp.webtoon_viewer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.widget.LinearLayout;
 
@@ -22,37 +21,50 @@ import java.util.Collections;
 
 public class ViewerActivity extends AppCompatActivity {
 
-    String rootPath=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-    String nowPath=rootPath;
+    String rootPath;
+    String nowPath;
+    int where = 0;
+    Boolean nowWatching = false;
     ArrayList<imageItems> filelist = new ArrayList<>();
+    LinearLayout field;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewer_activity_main);
         Toolbar tb = findViewById(R.id.toolbar);
+        rootPath = getFilesDir().toString();
+        nowPath = rootPath;
         tb.setTitle("웹툰 뷰어");
         setSupportActionBar(tb);
+        makelist();
         setDrawer();
     }
 
+    private void startImageViewer(String path) {
+        Intent intent = new Intent(this, imageViewer.class);
+        intent.putExtra("path", path);
+        new Thread(() -> {
+            nowWatching = true;
+            startActivity(intent);
+
+        }).start();
+    }
+
     private void makelist() {
-        Log.d("mdg",nowPath);
         getFileList();
-        ArrayList<fileTiles> makinglist=new ArrayList<>();
-        LinearLayout field = findViewById(R.id.fileField);
+        ArrayList<fileTiles> makinglist = new ArrayList<>();
+        field = findViewById(R.id.fileField);
         for (imageItems i : filelist) {
-            if (i.getNumber() != -1) {
-                Intent intent = new Intent(this, imageViewer.class);
-                intent.putExtra("path",nowPath);
-                new Thread(() -> {
-                    startActivity(intent);
-                }).start();
-                nowPath=nowPath.substring(0,nowPath.lastIndexOf("/")+1);
-                return;
-            }
             fileTiles t = new fileTiles(this);
             t.setData(i.getPath());
             t.setOnClickListener(v -> {
+                where++;
+                if (where == 2) {
+                    where = 1;
+                    startImageViewer(i.getPath());
+                    filelist.clear();
+                    return;
+                }
                 nowPath = i.getPath();
                 filelist.clear();
                 makelist();
@@ -60,14 +72,15 @@ public class ViewerActivity extends AppCompatActivity {
             makinglist.add(t);
         }
         field.removeAllViews();
-        for (fileTiles i : makinglist)
+        for (fileTiles i : makinglist) {
             field.addView(i);
+        }
     }
 
 
     private void getFileList() {
-        File fileList = new File(nowPath);
-        File[] files = fileList.listFiles();
+        File thisfileList = new File(nowPath);
+        File[] files = thisfileList.listFiles();
 
         if (files != null) {
             for (File i : files) {
@@ -79,12 +92,11 @@ public class ViewerActivity extends AppCompatActivity {
                     else
                         item = new imageItems(i.getPath(), false);
                     filelist.add(item);
+                    Log.d("mdg",i.getPath());
                 }
             }
         }
         Collections.sort(filelist);
-        for(int i=0;i<filelist.size();i++)
-            Log.d("yee",filelist.get(i).getPath());
     }
 
     void setDrawer() {
@@ -107,9 +119,11 @@ public class ViewerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(rootPath.equals(nowPath))
+        if (rootPath.equals(nowPath))
             return;
-
+        if (where == 0)
+            return;
+        where--;
         nowPath = nowPath.substring(0, nowPath.lastIndexOf("/"));
         LinearLayout field = findViewById(R.id.fileField);
         field.removeAllViews();
@@ -120,6 +134,9 @@ public class ViewerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        makelist();
+        if (nowWatching) {
+            makelist();
+            nowWatching = false;
+        }
     }
 }

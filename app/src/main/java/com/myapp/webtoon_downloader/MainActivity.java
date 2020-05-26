@@ -11,7 +11,6 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -45,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("mdg", getPackageName());
         setContentView(R.layout.downloader_activity_main);
         mpreference = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         new updateCheck().makeAlarm(this);
@@ -99,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
             int id = MainActivity.this.getResources().getIdentifier(tabId, "id", MainActivity.this.getPackageName());
             ScrollView view = findViewById(id);
             view.fullScroll(View.FOCUS_UP);
-            Log.d("mdg", tabId);
             new Thread(() -> {
                 int index = 0;
                 switch (tabId) {
@@ -132,8 +129,6 @@ public class MainActivity extends AppCompatActivity {
                         boolean data = db.Room_DAO().selectId(list.get(i)).bookmark;
                         BookmarkTiles tile = findViewById(list.get(i));
                         View bookmark = tile.findViewById(R.id.bookmark);
-
-                        Log.d("mdg", tile.getTitle() + data);
                         runOnUiThread(() -> {
                             bookmark.setSelected(data);
                         });

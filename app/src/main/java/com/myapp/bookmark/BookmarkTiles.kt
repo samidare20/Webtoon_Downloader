@@ -23,13 +23,14 @@ class BookmarkTiles constructor(
     init {
         LayoutInflater.from(context).inflate(R.layout.bookmark_tiles, this, true)
     }
-    val thiscontext=context
-    lateinit var title:String
-    fun setData(title: String, thumblink: String, comic: String,mcontext:Context) {
+
+    val thiscontext = context
+    lateinit var title: String
+    fun setData(title: String, thumblink: String, comic: String, mcontext: Context) {
 
         titlename.text = title
         Room_Database.getInstance(mcontext)
-        this.title=title
+        this.title = title
         try {
             CoroutineScope(Dispatchers.Main).launch {
                 Glide.with(thiscontext).load(thumblink).into(thumbnail)
@@ -41,23 +42,23 @@ class BookmarkTiles constructor(
             val intent = Intent(context, Episode::class.java)
             intent.putExtra("link", comic)
             intent.putExtra("title", title)
-            intent.putExtra("thumbnail",thumblink)
+            intent.putExtra("thumbnail", thumblink)
             startActivity(context, intent, null)
         }
         this.setOnLongClickListener {
-            val builder=AlertDialog.Builder(thiscontext)
+            val builder = AlertDialog.Builder(thiscontext)
             builder.setTitle("북마크에서 제거하시겠습니까?")
             builder.setPositiveButton("예") { DialogInterface, i: Int ->
                 CoroutineScope(Dispatchers.Default).launch {
                     val db = Room_Database.getInstance(mcontext)
                     val data = db.Room_DAO().selectTitle(title)
-                    data.bookmark=false
+                    data.bookmark = false
                     db.Room_DAO().update(data)
-                    Log.d("mydebug","${data.title}  ${data.bookmark}")
+                    Log.d("mydebug", "${data.title}  ${data.bookmark}")
                 }
                 DialogInterface.cancel()
             }
-            builder.setNeutralButton("아니오") { DialogInterface, i:Int->
+            builder.setNeutralButton("아니오") { DialogInterface, i: Int ->
                 DialogInterface.cancel()
             }
             builder.create().show()

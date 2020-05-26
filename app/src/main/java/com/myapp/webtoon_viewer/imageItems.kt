@@ -15,8 +15,8 @@ class imageItems(path: String, isImage: Boolean) : Comparable<imageItems> {
     }
 
     override fun compareTo(other: imageItems): Int {
-        return if(number!=-1&&other.number!=-1)
-                number.compareTo(other.number)
+        return if (number != -1 && other.number != -1)
+            number.compareTo(other.number)
         else
             path.toLowerCase().compareTo(other.path.toLowerCase())
     }

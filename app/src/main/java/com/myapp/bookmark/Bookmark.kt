@@ -17,7 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class Bookmark : AppCompatActivity() {
-    val mcontext=contextManager().getContext()
+    val mcontext = contextManager().getContext()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.bookmark_activity_main)
@@ -27,20 +27,22 @@ class Bookmark : AppCompatActivity() {
         setField()
         setDrawer()
     }
-    fun setField(){
+
+    fun setField() {
 
         CoroutineScope(Dispatchers.Default).launch {
-            val db=Room_Database.getInstance(mcontext)
-            val list=db.Room_DAO().selectBookmark()
-            val layout=bookmarkField
-            for(i in list){
-                val tile= BookmarkTiles(this@Bookmark)
-                tile.setData(i.title,i.ThumbnailLink,i.EpisodeLink,mcontext)
+            val db = Room_Database.getInstance(mcontext)
+            val list = db.Room_DAO().selectBookmark()
+            val layout = bookmarkField
+            for (i in list) {
+                val tile = BookmarkTiles(this@Bookmark)
+                tile.setData(i.title, i.ThumbnailLink, i.EpisodeLink, mcontext)
                 layout.addView(tile)
                 tile.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
             }
         }
     }
+
     fun setDrawer() {
         val navi = navi
         navi.setNavigationItemSelectedListener { item: MenuItem ->

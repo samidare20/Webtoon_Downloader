@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
-import android.os.Environment
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import org.jsoup.Jsoup
@@ -17,13 +16,14 @@ import java.net.URL
 
 
 class Download(val link: String, val title: String, val series: String, val context: Context) {
-    private var path = Environment.getExternalStorageDirectory().absolutePath.toString() + "/download/"
+    private var path = context.filesDir.toString()
+
     private val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-    lateinit var html:List<String>
+    lateinit var html: List<String>
     val id = (System.currentTimeMillis() / 1000).toInt()
 
     init {
-        Log.d("mdg","class check")
+        Log.d("mdg", "class check")
         Thread(Runnable {
             makefolder()
             val doc = Jsoup.connect(link).get()
@@ -35,15 +35,7 @@ class Download(val link: String, val title: String, val series: String, val cont
 
 
     private fun makefolder() {
-
         var folder = File(path)
-        if (!folder.exists())
-            folder.mkdir()
-
-        path += "Webtoon"
-        folder = File(path)
-        if (!folder.exists())
-            folder.mkdir()
 
         path += "/" + series
         folder = File(path)
@@ -59,8 +51,8 @@ class Download(val link: String, val title: String, val series: String, val cont
     fun download() {
 
         val nowstring = ArrayList<String>()
-        var index=1
-        for(i in html){
+        var index = 1
+        for (i in html) {
             if (i.indexOf("title") != -1)
                 nowstring.add(i.substring(i.indexOf("src") + 5, i.indexOf("title") - 2))
         }
@@ -113,17 +105,17 @@ class Download(val link: String, val title: String, val series: String, val cont
                 notiBuilder.setContentText("다운로드가 일시중지됨")
                 notiBuilder.setOngoing(false)
                 notiBuilder.setProgress(0, 1, true)
-                notificationManager.notify(id,notiBuilder.build())
+                notificationManager.notify(id, notiBuilder.build())
 
 
                 var pendingIntent: PendingIntent
                 val mintent = Intent(context, notiRestartEvent::class.java)
-                mintent.putExtra("index",index-1)
+                mintent.putExtra("index", index - 1)
                 mintent.putExtra("id", id)
                 mintent.putExtra("title", title)
                 mintent.putExtra("path", path)
-                mintent.putExtra("link",link)
-                mintent.putExtra("series",series)
+                mintent.putExtra("link", link)
+                mintent.putExtra("series", series)
 
                 pendingIntent = PendingIntent.getBroadcast(context, 1, mintent, PendingIntent.FLAG_UPDATE_CURRENT)
                 notiBuilder.addAction(R.drawable.ic_launcher_background, "재시작", pendingIntent)

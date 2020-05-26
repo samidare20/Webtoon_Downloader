@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Display;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -17,42 +20,46 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class imageViewer extends AppCompatActivity {
-    String path="";
-    Context mcontext=this;
+    String path = "";
+    Context mcontext = this;
+    Display display;
+    Point size = new Point();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewer_image_viewer);
-        Intent intent=getIntent();
-        path=intent.getStringExtra("path")+"/";
+        Intent intent = getIntent();
+        path = intent.getStringExtra("path") + "/";
+        display = getWindowManager().getDefaultDisplay();
+        display.getSize(size);
         makefield();
     }
-    private void  makefield() {
+
+    private void makefield() {
         File fileList = new File(path);
         File[] files = fileList.listFiles();
-        ArrayList<imageItems> filelist=new ArrayList<>();
+        ArrayList<imageItems> filelist = new ArrayList<>();
         if (files != null) {
-            for (File i:files) {
-                String t = i.toString();
-                if ('.' != t.charAt(t.lastIndexOf("/") + 1)) {
-                    imageItems item;
-                    if (i.getPath().contains("jpg"))
-                        item = new imageItems(i.getPath(), true);
-                    else
-                        item = new imageItems(i.getPath(), false);
-                    filelist.add(item);
-                }
+            for (File i : files) {
+                imageItems item;
+                item = new imageItems(i.getPath(), true);
+                filelist.add(item);
             }
         }
         Collections.sort(filelist);
-        LinearLayout field=findViewById(R.id.imageField);
-        for(imageItems i:filelist)
-        {
+        LinearLayout field = findViewById(R.id.imageField);
+        for (imageItems i : filelist) {
             ImageView image = new ImageView(this);
             File file = new File(i.getPath());
             Bitmap bm = BitmapFactory.decodeFile(file.getAbsolutePath());
             image.setImageBitmap(bm);
+            image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                image.setAdjustViewBounds(true);
+            }
             field.addView(image);
+            image.getLayoutParams().width = size.x;
         }
     }
 }
