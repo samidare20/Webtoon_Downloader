@@ -33,7 +33,9 @@ public class imageViewer extends AppCompatActivity {
         path = intent.getStringExtra("path") + "/";
         display = getWindowManager().getDefaultDisplay();
         display.getSize(size);
-        makefield();
+        new Thread(() -> {
+            makefield();
+        }).start();
     }
 
     private void makefield() {
@@ -48,18 +50,21 @@ public class imageViewer extends AppCompatActivity {
             }
         }
         Collections.sort(filelist);
-        LinearLayout field = findViewById(R.id.imageField);
-        for (imageItems i : filelist) {
-            ImageView image = new ImageView(this);
-            File file = new File(i.getPath());
-            Bitmap bm = BitmapFactory.decodeFile(file.getAbsolutePath());
-            image.setImageBitmap(bm);
-            image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                image.setAdjustViewBounds(true);
+        runOnUiThread(() -> {
+            LinearLayout field = findViewById(R.id.imageField);
+            for (imageItems i : filelist) {
+                ImageView image = new ImageView(this);
+                File file = new File(i.getPath());
+                Bitmap bm = BitmapFactory.decodeFile(file.getAbsolutePath());
+                image.setImageBitmap(bm);
+                image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    image.setAdjustViewBounds(true);
+                }
+                field.addView(image);
+                image.getLayoutParams().width = size.x;
             }
-            field.addView(image);
-            image.getLayoutParams().width = size.x;
-        }
+        });
+
     }
 }

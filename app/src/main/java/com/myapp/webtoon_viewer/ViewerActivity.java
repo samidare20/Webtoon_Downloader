@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -27,6 +28,7 @@ public class ViewerActivity extends AppCompatActivity {
     Boolean nowWatching = false;
     ArrayList<imageItems> filelist = new ArrayList<>();
     LinearLayout field;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,11 +72,42 @@ public class ViewerActivity extends AppCompatActivity {
                 makelist();
             });
             makinglist.add(t);
+            t.setOnLongClickListener(v -> {
+                AlertDialog.Builder confirm = new AlertDialog.Builder(this);
+                confirm.setTitle("웹툰 삭제");
+                confirm.setMessage("웹툰을 제거하시겠습니까?");
+                confirm.setPositiveButton("네", (dialog, which) -> {
+                    field.removeView(t);
+                    rmdir(t.getPath());
+                });
+                confirm.setNegativeButton("아니오", null);
+                confirm.create().show();
+
+                return false;
+            });
         }
         field.removeAllViews();
         for (fileTiles i : makinglist) {
             field.addView(i);
         }
+    }
+
+    private void rmdir(String path) {
+        Log.d("mdg", path);
+        File dir = new File(path);
+        File[] childFileList = dir.listFiles();
+        if (dir.exists()) {
+            for (File childFile : childFileList) {
+                if (childFile.isDirectory()) {
+                    rmdir(childFile.getAbsolutePath()); //하위 디렉토리
+                } else {
+                    Log.d("mdg", childFile.getPath());
+                    childFile.delete(); //하위 파일
+                }
+            }
+            dir.delete();
+        }
+
     }
 
 
@@ -92,7 +125,6 @@ public class ViewerActivity extends AppCompatActivity {
                     else
                         item = new imageItems(i.getPath(), false);
                     filelist.add(item);
-                    Log.d("mdg",i.getPath());
                 }
             }
         }
@@ -119,10 +151,10 @@ public class ViewerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (rootPath.equals(nowPath))
+        if (where == 0) {
+            finish();
             return;
-        if (where == 0)
-            return;
+        }
         where--;
         nowPath = nowPath.substring(0, nowPath.lastIndexOf("/"));
         LinearLayout field = findViewById(R.id.fileField);
