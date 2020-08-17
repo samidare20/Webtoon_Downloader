@@ -1,7 +1,10 @@
 package com.myapp.webtoon_downloader
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.ViewDebug
 import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -17,6 +20,10 @@ import org.jsoup.Jsoup
 class Episode : AppCompatActivity() {
     val mcontext = this
     lateinit var mintent: Bundle
+    class episodeSource(var link:String,var title:String){
+    }
+    var episodePackage=ArrayList<episodeSource>()
+
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +32,6 @@ class Episode : AppCompatActivity() {
         mintent = intent.extras!!
         comic_title.text = mintent.getString("title")
         Glide.with(this).load(mintent.getString("thumbnail")).into(thumbnail)
-
         init()
     }
 
@@ -95,6 +101,7 @@ class Episode : AppCompatActivity() {
                         val job = CoroutineScope(Dispatchers.Main).launch {
                             val episode = episodeTiles(mcontext)
                             episode.setTile(title, href, mintent.getString("title")!!)
+                            episodePackage.add(episodeSource(href,title))
                             episode_area.addView(episode)
                         }
                         job.join()
@@ -106,5 +113,16 @@ class Episode : AppCompatActivity() {
                 page++
             }
         }
+        episode_download.setOnClickListener {
+            Log.d("mydebug","size=${episodePackage.size}")
+            for(i in episodePackage){
+                Log.d("mydebug",i.title+i.link)
+                Download(i.link,i.title,mintent.getString("title")!!,mcontext)
+            }
+
+        }
+
+
     }
+
 }

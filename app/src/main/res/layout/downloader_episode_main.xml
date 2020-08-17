@@ -42,13 +42,15 @@
                 android:layout_height="1dp"
                 android:background="@drawable/episode_border" />
 
-            <TextView
-                android:id="@+id/episode_writer"
+            <Button
+                android:id="@+id/episode_download"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+
                 android:layout_weight="0.5"
                 android:gravity="center"
-                android:text="작가" />
+                android:text="로딩중....." />
         </LinearLayout>
 
     </LinearLayout>

@@ -45,16 +45,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.downloader_activity_main);
-        test test=new test();
 
-        /*mpreference = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+
+        mpreference = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         new updateCheck().makeAlarm(this);
 
         setTabhost();
         setTab();
         setDrawer();
         makePermission();
-        createNotificationChannel();*/
+        createNotificationChannel();
     }
 
     void setTabhost() {
@@ -216,8 +216,7 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("1004", "yee", NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            channel.setVibrationPattern(new long[0]);
-            channel.enableVibration(true);
+            channel.enableVibration(false);
             notificationManager.createNotificationChannel(channel);
         }
     }

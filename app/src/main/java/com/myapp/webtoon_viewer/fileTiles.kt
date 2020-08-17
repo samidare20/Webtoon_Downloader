@@ -1,10 +1,12 @@
 package com.myapp.webtoon_viewer
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.myapp.webtoon_downloader.R
 import kotlinx.android.synthetic.main.viewer_file_tiles.view.*
+import java.lang.Exception
 
 class fileTiles constructor(
         context: Context
@@ -17,6 +19,11 @@ class fileTiles constructor(
 
     fun setData(root: String) {
         path = root
-        filename.text = root.substring(root.lastIndexOf("/") + 1, root.length)
+        try {
+            filename.text = root.substring(root.lastIndexOf("/") + 1, root.indexOf("$$="))
+        }
+        catch (e:Exception){
+            filename.text = root.substring(root.lastIndexOf("/") + 1)
+        }
     }
 }

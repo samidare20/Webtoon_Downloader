@@ -20,9 +20,10 @@ class Download(val link: String, val title: String, val series: String, val cont
 
     private val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     lateinit var html: List<String>
-    val id = (System.currentTimeMillis() / 1000).toInt()
+    var id = 0
 
     init {
+        id=(System.currentTimeMillis() / 1000).toInt()
         Log.d("mdg", "class check")
         Thread(Runnable {
             makefolder()
@@ -43,6 +44,8 @@ class Download(val link: String, val title: String, val series: String, val cont
             folder.mkdir()
 
         path += "/" + title
+
+        path +="$$"+link.substring(link.indexOf("&no=")+3)
         folder = File(path)
         if (!folder.exists())
             folder.mkdir()
