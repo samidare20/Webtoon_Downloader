@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -93,7 +94,6 @@ public class ViewerActivity extends AppCompatActivity {
     }
 
     private void rmdir(String path) {
-        Log.d("mdg", path);
         File dir = new File(path);
         File[] childFileList = dir.listFiles();
         if (dir.exists()) {
@@ -101,7 +101,6 @@ public class ViewerActivity extends AppCompatActivity {
                 if (childFile.isDirectory()) {
                     rmdir(childFile.getAbsolutePath()); //하위 디렉토리
                 } else {
-                    Log.d("mdg", childFile.getPath());
                     childFile.delete(); //하위 파일
                 }
             }

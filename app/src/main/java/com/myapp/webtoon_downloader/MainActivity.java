@@ -45,14 +45,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.downloader_activity_main);
-        mpreference = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+        test test=new test();
+
+        /*mpreference = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         new updateCheck().makeAlarm(this);
 
         setTabhost();
         setTab();
         setDrawer();
         makePermission();
-        createNotificationChannel();
+        createNotificationChannel();*/
     }
 
     void setTabhost() {

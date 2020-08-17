@@ -7,10 +7,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.myapp.webtoon_downloader.R;
@@ -25,6 +29,7 @@ public class imageViewer extends AppCompatActivity {
     Display display;
     Point size = new Point();
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,11 +38,28 @@ public class imageViewer extends AppCompatActivity {
         path = intent.getStringExtra("path") + "/";
         display = getWindowManager().getDefaultDisplay();
         display.getSize(size);
-        new Thread(() -> {
-            makefield();
-        }).start();
-    }
 
+        Thread a=new Thread(() -> {
+            makefield();
+        });
+        a.start();
+        setScorllview();
+    }
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setScorllview(){
+        ScrollView scrollview=findViewById(R.id.scrollView);
+        LinearLayout field=findViewById(R.id.imageField);
+        int bottomY=field.getBottom();
+        Log.d("mdg",Integer.toString(bottomY));
+        scrollview.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            Log.d("mdg",Integer.toString(scrollY));
+            if(scrollY==bottomY)
+                Log.d("mdg","it's bottom! it's bottom!  it's bottom! it's bottom! it's bottom! it's bottom!");
+            else
+                setScorllview();
+        });
+    }
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void makefield() {
         File fileList = new File(path);
         File[] files = fileList.listFiles();
@@ -64,6 +86,7 @@ public class imageViewer extends AppCompatActivity {
                 field.addView(image);
                 image.getLayoutParams().width = size.x;
             }
+            Log.d("mdg","activity complete");
         });
 
     }
