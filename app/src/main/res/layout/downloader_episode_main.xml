@@ -16,16 +16,16 @@
 
 
         <ImageView
-            android:layout_weight="0.5"
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="0.5"
             tools:srcCompat="@tools:sample/avatars" />
 
         <LinearLayout
-            android:layout_weight="0.5"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="0.5"
             android:orientation="vertical"
             android:weightSum="1">
 
@@ -46,9 +46,9 @@
                 android:id="@+id/episode_download"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="?attr/selectableItemBackground"
-
                 android:layout_weight="0.5"
+
+                android:background="?attr/selectableItemBackground"
                 android:gravity="center"
                 android:text="로딩중....." />
         </LinearLayout>

@@ -19,14 +19,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <service
-            android:name=".Downlaodservice"
-            android:exported="false"></service>
-        <service
-            android:name=".Downloadservice"
-            android:enabled="true"
-            android:exported="true" />
-
         <receiver
             android:name=".notiRestartEvent"
             android:enabled="true"
@@ -45,8 +37,9 @@
         <activity android:name="com.myapp.bookmark.Bookmark" />
         <activity android:name=".contextManager" />
         <activity android:name="com.myapp.webtoon_viewer.imageViewer" />
+        <activity android:name="com.myapp.manamoa.ManamoaActivity"/>
 
-        <service android:name=".Download" />
+
     </application>
 
 </manifest>

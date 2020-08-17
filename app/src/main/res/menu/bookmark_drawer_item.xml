@@ -6,6 +6,12 @@
         android:title="웹툰 다운로더"/>
 
     <item
+        android:id="@+id/manamoa"
+        android:title="마나모아 다운로더"
+        />
+
+
+    <item
         android:id="@+id/viewer"
         android:title="웹툰 뷰어"/>
 </menu>

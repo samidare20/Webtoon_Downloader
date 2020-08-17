@@ -23,7 +23,7 @@ class Download(val link: String, val title: String, val series: String, val cont
     var id = 0
 
     init {
-        id=(System.currentTimeMillis() / 1000).toInt()
+        id = (System.currentTimeMillis() / 1000).toInt()
         Log.d("mdg", "class check")
         Thread(Runnable {
             makefolder()
@@ -45,7 +45,7 @@ class Download(val link: String, val title: String, val series: String, val cont
 
         path += "/" + title
 
-        path +="$$"+link.substring(link.indexOf("&no=")+3)
+        path += "$$" + link.substring(link.indexOf("&no=") + 3)
         folder = File(path)
         if (!folder.exists())
             folder.mkdir()

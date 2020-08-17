@@ -6,6 +6,10 @@
         android:title="웹툰 다운로더"/>
 
     <item
+        android:id="@+id/manamoa"
+        android:title="마나모아 다운로더"/>
+
+    <item
         android:id="@+id/bookmarklist"
         android:title="북마크"/>
 </menu>

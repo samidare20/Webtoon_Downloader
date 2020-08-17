@@ -27,6 +27,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.myapp.bookmark.Bookmark;
 import com.myapp.bookmark.BookmarkTiles;
+import com.myapp.manamoa.ManamoaActivity;
 import com.myapp.webtoon_viewer.ViewerActivity;
 
 import java.util.ArrayList;
@@ -193,7 +194,10 @@ public class MainActivity extends AppCompatActivity {
         navi.setNavigationItemSelectedListener(item -> {
             DrawerLayout drawer = findViewById(R.id.drawer);
             drawer.closeDrawer(GravityCompat.START);
-            if (item.getItemId() == R.id.viewer) {
+            if (item.getItemId() == R.id.manamoa) {
+                Intent intent = new Intent(this, ManamoaActivity.class);
+                startActivity(intent);
+            } else if (item.getItemId() == R.id.viewer) {
                 Intent intent = new Intent(this, ViewerActivity.class);
                 startActivity(intent);
             } else if (item.getItemId() == R.id.bookmarklist) {

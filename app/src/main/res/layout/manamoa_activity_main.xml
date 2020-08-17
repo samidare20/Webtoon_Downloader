@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/appbar">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:id="@+id/manamoaSearchResult"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appbar">
+    <LinearLayout
+        android:id="@+id/searchbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/manamoaSearchLink"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_weight=".8"
+            android:hint="마나모아 링크를 입력해 주십시오." />
+
+        <Button
+            android:id="@+id/manamoaSearchButton"
+            android:text="검색"
+            android:layout_weight=".2"
+            android:layout_height="55dp"
+            android:layout_width="wrap_content"/>
+    </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>
