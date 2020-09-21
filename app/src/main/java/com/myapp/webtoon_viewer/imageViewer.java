@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.ImageView;
@@ -39,26 +38,29 @@ public class imageViewer extends AppCompatActivity {
         display = getWindowManager().getDefaultDisplay();
         display.getSize(size);
 
-        Thread a=new Thread(() -> {
+        Thread a = new Thread(() -> {
             makefield();
         });
         a.start();
         setScorllview();
     }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setScorllview(){
-        ScrollView scrollview=findViewById(R.id.scrollView);
-        LinearLayout field=findViewById(R.id.imageField);
-        int bottomY=field.getBottom();
-        Log.d("mdg",Integer.toString(bottomY));
-        scrollview.setOnScrollChangeListener((v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-            Log.d("mdg",Integer.toString(scrollY));
-            if(scrollY==bottomY)
-                Log.d("mdg","it's bottom! it's bottom!  it's bottom! it's bottom! it's bottom! it's bottom!");
-            else
-                setScorllview();
+    private void setScorllview() {
+        ScrollView scrollview = findViewById(R.id.scrollView);
+        View v = scrollview.getChildAt(scrollview.getChildCount() - 1);
+
+        scrollview.setOnScrollChangeListener((view, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            int nowy = scrollview.getScrollY();
+            int bottomY = v.getBottom();
+            int height = scrollview.getHeight();
+
+            if (bottomY == nowy + height) {
+                //todo 바닥에 닿았을 때의 이벤트 처리 하자
+            }
         });
     }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void makefield() {
         File fileList = new File(path);
@@ -86,7 +88,6 @@ public class imageViewer extends AppCompatActivity {
                 field.addView(image);
                 image.getLayoutParams().width = size.x;
             }
-            Log.d("mdg","activity complete");
         });
 
     }

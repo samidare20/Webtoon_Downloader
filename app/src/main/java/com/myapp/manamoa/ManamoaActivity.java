@@ -2,7 +2,6 @@ package com.myapp.manamoa;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -13,11 +12,9 @@ import com.myapp.webtoon_downloader.R;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class ManamoaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,18 +26,20 @@ public class ManamoaActivity extends AppCompatActivity {
         setSupportActionBar(tb);
         init();
     }
-    private void init(){
-        Button searchButton=findViewById(R.id.manamoaSearchButton);
-        EditText searchInput=findViewById(R.id.manamoaSearchLink);
+
+    private void init() {
+        Button searchButton = findViewById(R.id.manamoaSearchButton);
+        EditText searchInput = findViewById(R.id.manamoaSearchLink);
         searchButton.setOnClickListener(v -> {
-            String link=searchInput.getText().toString();
+            String link = searchInput.getText().toString();
             search(link);
         });
     }
-    private void search(String link){
+
+    private void search(String link) {
         new Thread(() -> {
-            String html="";
-            String[] episode={"",};
+            String html = "";
+            String[] episode = {"",};
             try {
                 Document doc = Jsoup.connect(link).get();
                 Elements element = doc.select("div.toon-nav");
@@ -53,18 +52,17 @@ public class ManamoaActivity extends AppCompatActivity {
             html = html.substring(0, html.indexOf("\""));
             html = html.replace("amp;", "");
             html = "https://manamoa.net" + html;
-            Log.d("mydebug",html);
+            Log.d("mydebug", html);
 
             try {
                 Document doc = Jsoup.connect(html).get();
                 Elements element = doc.select("div.chapter-list");
-                episode=element.toString().split("<div class=\"title\">");
-            }
-            catch (Exception ignored){
+                episode = element.toString().split("<div class=\"title\">");
+            } catch (Exception ignored) {
 
             }
-            for(int i=0;i<episode.length;i++)
-                Log.d("mydebug",episode[i]);
+            for (int i = 0; i < episode.length; i++)
+                Log.d("mydebug", episode[i]);
 
         }).start();
     }
