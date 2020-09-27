@@ -104,7 +104,6 @@ public class ViewerActivity extends AppCompatActivity {
             }
             dir.delete();
         }
-
     }
 
 

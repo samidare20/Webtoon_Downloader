@@ -17,13 +17,26 @@ class notiRestartEvent : BroadcastReceiver() {
         val path = mintent.getString("path")!!
         val index = "${mintent.getInt("index")}.jpg"
         val id = mintent.getInt("id")
-        val mfile = File(path + title + index)
 
-        mfile.delete()
-
+        rmdir(path)
         val notificationmanager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationmanager.cancel(id)
 
-        Download(link, title, series, context)
+        //Download(link, title, series, context)
+    }
+
+    private fun rmdir(path: String) {
+        val dir = File(path)
+        val childFileList = dir.listFiles()
+        if (dir.exists()) {
+            for (childFile in childFileList) {
+                if (childFile.isDirectory) {
+                    rmdir(childFile.absolutePath) //하위 디렉토리
+                } else {
+                    childFile.delete() //하위 파일
+                }
+            }
+            dir.delete()
+        }
     }
 }

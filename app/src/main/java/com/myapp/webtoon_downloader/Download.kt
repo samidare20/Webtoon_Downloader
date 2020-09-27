@@ -126,6 +126,8 @@ class Download(val link: String, val title: String, val series: String, val cont
                 pendingIntent = PendingIntent.getBroadcast(context, 1, mintent, PendingIntent.FLAG_UPDATE_CURRENT)
                 notiBuilder.addAction(R.drawable.ic_launcher_background, "취소", pendingIntent)
                 notificationManager.notify(id, notiBuilder.build())
+
+
                 return
             }
             updateProgress(index, notiBuilder, max)
@@ -147,6 +149,9 @@ class Download(val link: String, val title: String, val series: String, val cont
         notificationManager.notify(id, notification.build())
 
 
+    }
+    fun cancel(id:Int){
+        notificationManager.cancel(id)
     }
 }
 
