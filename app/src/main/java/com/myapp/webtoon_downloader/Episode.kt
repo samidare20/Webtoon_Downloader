@@ -6,17 +6,20 @@ import android.os.Handler
 import android.os.Message
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.downloader_episode_main.*
 import org.jsoup.Jsoup
+import com.myapp.webtoon_downloader.databinding.DownloaderEpisodeMainBinding
 
 class Episode : AppCompatActivity() {
+    private lateinit var binding: DownloaderEpisodeMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.downloader_episode_main)
+        binding = DownloaderEpisodeMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val mcontext = this
         val intent = intent.extras!!
-        Glide.with(this).load(intent.getString("thumbnail")).into(episode_thumbnail)
-        comic_title.text = intent.getString("title")
+        Glide.with(this).load(intent.getString("thumbnail")).into(binding.episodeThumbnail)
+        binding.comicTitle.text = intent.getString("title")
 
         val handler = @SuppressLint("HandlerLeak")
         object : Handler() {
@@ -27,7 +30,7 @@ class Episode : AppCompatActivity() {
                 message = message.substring(0, message.indexOf("-"))
 
                 episode.setTile(title, message, intent.getString("title")!!)
-                episode_area.addView(episode)
+                binding.episodeArea.addView(episode)
             }
         }
         Thread(Runnable {

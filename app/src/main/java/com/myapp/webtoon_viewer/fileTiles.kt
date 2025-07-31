@@ -4,19 +4,20 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.myapp.webtoon_downloader.R
-import kotlinx.android.synthetic.main.viewer_file_tiles.view.*
+import com.myapp.webtoon_viewer.databinding.ViewerFileTilesBinding
 
 class fileTiles constructor(
         context: Context
 ) : LinearLayout(context) {
     var path = ""
+    private val binding: ViewerFileTilesBinding
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.viewer_file_tiles, this, true)
+        binding = ViewerFileTilesBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     fun setData(root: String) {
         path = root
-        filename.text = root.substring(root.lastIndexOf("/") + 1, root.length)
+        binding.filename.text = root.substring(root.lastIndexOf("/") + 1, root.length)
     }
 }

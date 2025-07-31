@@ -7,25 +7,26 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat.startActivity
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.downloader_webtoon_tiles.view.*
+import com.myapp.webtoon_downloader.databinding.DownloaderWebtoonTilesBinding
 
 class WebtoonTiles constructor(
         context: Context
 ) : LinearLayout(context) {
+    private val binding: DownloaderWebtoonTilesBinding
     init {
-        LayoutInflater.from(context).inflate(R.layout.downloader_webtoon_tiles, this, true)
+        binding = DownloaderWebtoonTilesBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     fun setData(title: String, link: String, comic: String, mbookmark: Boolean) {
-        titlename.text = title
-        bookmark.isSelected = mbookmark
+        binding.titlename.text = title
+        binding.bookmark.isSelected = mbookmark
         val db = Room_Database.getInstance(context)
 
         try {
-            Glide.with(context).load(link).into(thumbnail)
+            Glide.with(context).load(link).into(binding.thumbnail)
         } catch (e: Exception) {
             Log.d("mydebug", e.toString())
-            Log.d("mydebug", thumbnail.toString())
+            Log.d("mydebug", binding.thumbnail.toString())
         }
         this.setOnClickListener {
             val intent = Intent(context, Episode::class.java)
@@ -35,11 +36,11 @@ class WebtoonTiles constructor(
             startActivity(context, intent, null)
         }
 
-        bookmark.setOnClickListener {
+        binding.bookmark.setOnClickListener {
             Thread(Runnable {
-                bookmark.isSelected = !bookmark.isSelected
+                binding.bookmark.isSelected = !binding.bookmark.isSelected
                 val data = db.Room_DAO().selectTitle(title)
-                data.bookmark = bookmark.isSelected
+                data.bookmark = binding.bookmark.isSelected
                 db.Room_DAO().update(data)
             }).start()
         }
