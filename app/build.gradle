@@ -1,20 +1,23 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
 
 android {
-    namespace "com.example.webtoon_downloader"
-    compileSdkVersion 34
+    namespace "com.myapp.webtoon_downloader"
+    compileSdkVersion 36
     defaultConfig {
         applicationId "com.example.webtoon_downloader"
-        minSdkVersion 15
+        minSdkVersion 21
+        multiDexEnabled true
         targetSdkVersion 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures {
-        viewBinding true
+        dataBinding true
     }
     buildTypes {
         release {
@@ -23,32 +26,31 @@ android {
         }
     }
     compileOptions {
-        targetCompatibility = "21"
-        sourceCompatibility = "21"
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
 
 dependencies {
     //room plugin
-    implementation "androidx.room:room-runtime:2.2.3"
-    annotationProcessor "androidx.room:room-compiler:2.2.3"
-    kapt "android.arch.persistence.room:compiler:1.1.1"
+    implementation "androidx.room:room-runtime:2.7.2"
+    kapt "androidx.room:room-compiler:2.7.2"
     //
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
 
-    implementation "androidx.core:core-ktx:1.2.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation "androidx.core:core-ktx:1.16.0"
+    implementation 'com.google.android.material:material:1.12.0'
     //do not update
-    implementation 'org.jsoup:jsoup:1.10.3'
+    implementation 'org.jsoup:jsoup:1.18.1'
     //do not update
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
-
-}
-repositories {
-    mavenCentral()
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    kapt 'com.github.bumptech.glide:compiler:4.16.0'
 }
