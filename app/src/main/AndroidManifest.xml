@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.myapp.webtoon_downloader">
+    >
 
     <!-- permission -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -19,27 +18,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <receiver
-            android:name=".notiRestartEvent"
-            android:enabled="true"
-            android:exported="true" /> <!-- receiver -->
-        <receiver android:name=".updateCheck" />
-        <receiver android:name=".notiCancelEvent" /> <!-- receiver -->
-        <activity android:name=".MainActivity">
+
+        <!-- service -->
+        <!-- receiver -->
+        <receiver android:name="com.myapp.webtoon_downloader.updateCheck" />
+
+        <activity android:name="com.myapp.webtoon_downloader.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Episode" />
-        <activity android:name="com.myapp.webtoon_viewer.ViewerActivity" />
-        <activity android:name="com.myapp.bookmark.Bookmark" />
-        <activity android:name=".contextManager" />
-        <activity android:name="com.myapp.webtoon_viewer.imageViewer" />
-        <activity android:name="com.myapp.manamoa.ManamoaActivity"/>
-
-
+        <activity android:name="com.myapp.webtoon_downloader.Episode" />
+        <activity android:name="com.myapp.webtoon_viewer.ViewerActivity"/>
     </application>
 
 </manifest>

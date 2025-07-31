@@ -1,76 +1,44 @@
 package com.myapp.webtoon_downloader
 
-import android.os.Build
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.widget.Toast
-import androidx.annotation.RequiresApi
+import android.os.Handler
+import android.os.Message
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.downloader_episode_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.jsoup.Jsoup
+import com.myapp.webtoon_downloader.databinding.DownloaderEpisodeMainBinding
 
 class Episode : AppCompatActivity() {
-    val mcontext = this
-    lateinit var mintent: Bundle
+    private lateinit var binding: DownloaderEpisodeMainBinding
 
-    class episodeSource(var link: String, var title: String)
-
-    var episodePackage = ArrayList<episodeSource>()
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.downloader_episode_main)
-        mintent = intent.extras!!
-        comic_title.text = mintent.getString("title")
-        Glide.with(this).load(mintent.getString("thumbnail")).into(thumbnail)
-        init()
-    }
+        binding = DownloaderEpisodeMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        val mcontext = this
+        val intent = intent.extras!!
+        Glide.with(this).load(intent.getString("thumbnail")).into(binding.episodeThumbnail)
+        binding.comicTitle.text = intent.getString("title")
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun init() {
-        CoroutineScope(Dispatchers.Default).launch {
-            val link = mintent.getString("link") + "&page="
+        val handler = @SuppressLint("HandlerLeak")
+        object : Handler() {
+            override fun handleMessage(msg: Message) {
+                val episode = episodeTiles(mcontext)
+                var message = msg.obj.toString()
+                val title = message.substring(message.indexOf("-") + 1)
+                message = message.substring(0, message.indexOf("-"))
+
+                episode.setTile(title, message, intent.getString("title")!!)
+                binding.episodeArea.addView(episode)
+            }
+        }
+        Thread(Runnable {
+            val link = intent.getString("link") + "&page="
             var prev = ""
             var page = 1
-            var destroy = false
             while (true) {
-                lateinit var doc: org.jsoup.nodes.Document
-                runBlocking {
-                    val job = CoroutineScope(Dispatchers.IO).launch {
-                        try {
-                            doc = Jsoup.connect(link + page.toString()).get()
-                        } catch (e: java.lang.Exception) {
-                            destroy = true
-                            return@launch
-                        }
-                    }
-                    if (destroy)
-                        return@runBlocking
-                    job.join()
-                }
-                if (destroy) {
-                    runOnUiThread {
-                        val mToast = Toast.makeText(applicationContext, "인터넷이 연결되지 않았습니다.", Toast.LENGTH_LONG)
-                        mToast.show()
-                        val restartButton = Button(mcontext)
-                        restartButton.text = "재시도"
-                        restartButton.setOnClickListener {
-                            episode_area.removeAllViews()
-                            init()
-                        }
-                        episode_area.addView(restartButton)
-                    }
-                    return@launch
-                }
-
+                val doc = Jsoup.connect(link + page.toString()).get()
                 val elements = doc.select("tbody").toString()
                 val html = elements.split("<tr>")
                 var end = false
@@ -96,32 +64,17 @@ class Episode : AppCompatActivity() {
                     } catch (e: Exception) {
                         continue
                     }
-                    runBlocking {
-                        val job = CoroutineScope(Dispatchers.Main).launch {
-                            val episode = episodeTiles(mcontext)
-                            episode.setTile(title, href, mintent.getString("title")!!)
-                            episodePackage.add(episodeSource(href, title))
-                            episode_area.addView(episode)
-                        }
-                        job.join()
-                    }
 
+                    val message = Message.obtain()
+                    message.obj = "$href-$title"
+                    handler.sendMessage(message)
                 }
                 if (end)
                     break
                 page++
             }
-        }
-        episode_download.setOnClickListener {
-            Log.d("mydebug", "size=${episodePackage.size}")
-            for (i in episodePackage) {
-                Log.d("mydebug", i.title + i.link)
-                Download(i.link, i.title, mintent.getString("title")!!, mcontext)
-            }
-
-        }
-
-
+        }).start()
     }
+
 
 }

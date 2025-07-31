@@ -5,60 +5,53 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TabHost;
-import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
-import com.myapp.bookmark.Bookmark;
-import com.myapp.bookmark.BookmarkTiles;
-import com.myapp.manamoa.ManamoaActivity;
 import com.myapp.webtoon_viewer.ViewerActivity;
 
-import java.util.ArrayList;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public linkControl linkControl = new linkControl();
+    public Context mcontext = this;
+    String mainURL = "https://comic.naver.com/webtoon/weekday.nhn";
+    Point displaySize = new Point();
 
-    SharedPreferences mpreference;
-    SharedPreferences.Editor editor;
-    ArrayList<ArrayList<Integer>> webtoonList = new ArrayList<>();
-    private Context mcontext = this;
-    private double backKeyPressedTime;
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.downloader_activity_main);
 
-
-        mpreference = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         new updateCheck().makeAlarm(this);
 
-        setTabhost();
-        setTab();
-        setDrawer();
-        makePermission();
-        createNotificationChannel();
-    }
-
-    void setTabhost() {
+        Thread a = new Thread(() -> {
+            try {
+                Document doc = Jsoup.connect(mainURL).get();
+                Elements elements = doc.select("div.col_inner");
+                linkControl.sethtml(mcontext, elements.toString());
+            } catch (Exception ignored) {
+            }
+        });
+        a.start();
+        ////tabhost 세팅
         TabHost host = findViewById(R.id.host);
         host.setup();
         TabHost.TabSpec monspec = host.newTabSpec("montabScroll");
@@ -100,64 +93,29 @@ public class MainActivity extends AppCompatActivity {
             int id = MainActivity.this.getResources().getIdentifier(tabId, "id", MainActivity.this.getPackageName());
             ScrollView view = findViewById(id);
             view.fullScroll(View.FOCUS_UP);
-            new Thread(() -> {
-                int index = 0;
-                switch (tabId) {
-                    case "montabScroll":
-                        index = 0;
-                        break;
-                    case "tuetabScroll":
-                        index = 1;
-                        break;
-                    case "wedtabScroll":
-                        index = 2;
-                        break;
-                    case "thutabScroll":
-                        index = 3;
-                        break;
-                    case "fritabScroll":
-                        index = 4;
-                        break;
-                    case "sattabScroll":
-                        index = 5;
-                        break;
-                    case "suntabScroll":
-                        index = 6;
-                        break;
-                }
-                ArrayList<Integer> list = webtoonList.get(index);
-                try {
-                    for (int i = 0; i < list.size(); i++) {
-                        Room_Database db = Room_Database.getInstance(mcontext);
-                        boolean data = db.Room_DAO().selectId(list.get(i)).bookmark;
-                        BookmarkTiles tile = findViewById(list.get(i));
-                        View bookmark = tile.findViewById(R.id.bookmark);
-                        runOnUiThread(() -> {
-                            bookmark.setSelected(data);
-                        });
-                    }
-
-                } catch (Exception e) {
-                    System.out.println("it's wrong");
-                }
-
-            }).start();
         });
+        try {
+            a.join();
+        } catch (Exception ignored) {
+        }
+        makePermission();
+        createNotificationChannel();
+        Display display = getWindowManager().getDefaultDisplay();
+        display.getSize(displaySize);
+        setDrawer();
+        setTab();
 
         Toolbar tb = findViewById(R.id.toolbar);
         tb.setTitle("웹툰 다운로더");
         setSupportActionBar(tb);
+
+
+
     }
 
     void setTab() {//타일 설정
-        if (!mpreference.getBoolean("getdata", false)) {
-            new linkControl().sethtml(mcontext);
-            editor = mpreference.edit();
-            editor.putBoolean("getdata", true);
-            editor.apply();
-            return;
-        }
         Handler mhandler = new Handler();
+
         new Thread(() -> {
             String[] names = new String[]{"mon", "tue", "wed", "thu", "fri", "sat", "sun"};
             int nameindex = 0;
@@ -167,44 +125,31 @@ public class MainActivity extends AppCompatActivity {
             while (nameindex < 7) {
                 int id = MainActivity.this.getResources().getIdentifier(names[nameindex] + "tabContent", "id", MainActivity.this.getPackageName());
                 LinearLayout layout = MainActivity.this.findViewById(id);
+
                 datalist = db.Room_DAO().selectDay(names[nameindex]);
-                ArrayList<Integer> a = new ArrayList<>();
                 for (int i = 0; i < datalist.size(); i++) {
                     Room_Data data = datalist.get(i);
                     mhandler.post(() -> {
                         WebtoonTiles tile = new WebtoonTiles(mcontext);
                         tile.setData(data.title, data.ThumbnailLink, data.EpisodeLink, data.bookmark);
-                        tile.setId(0x8000 + data.id);
                         layout.addView(tile);
-                        a.add(0x8000 + data.id);
-                        tile.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+                        tile.getLayoutParams().width = displaySize.x;
                     });
                 }
                 nameindex++;
-                webtoonList.add(a);
-
             }
         }).start();
-
     }
-
     void setDrawer() {
         NavigationView navi = findViewById(R.id.navi);
 
         navi.setNavigationItemSelectedListener(item -> {
-            DrawerLayout drawer = findViewById(R.id.drawer);
-            drawer.closeDrawer(GravityCompat.START);
-            if (item.getItemId() == R.id.manamoa) {
-                Intent intent = new Intent(this, ManamoaActivity.class);
-                startActivity(intent);
-            } else if (item.getItemId() == R.id.viewer) {
+            if (item.getItemId() == R.id.viewer) {
+                DrawerLayout drawer = findViewById(R.id.drawer);
+                drawer.closeDrawer(GravityCompat.START);
                 Intent intent = new Intent(this, ViewerActivity.class);
                 startActivity(intent);
-            } else if (item.getItemId() == R.id.bookmarklist) {
-                Intent intent = new Intent(this, Bookmark.class);
-                startActivity(intent);
             }
-
             return true;
         });
     }
@@ -216,11 +161,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createNotificationChannel() {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("1004", "yee", NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            channel.enableVibration(false);
+            channel.setVibrationPattern(new long[0]);
+            channel.enableVibration(true);
             notificationManager.createNotificationChannel(channel);
         }
     }
@@ -231,27 +176,7 @@ public class MainActivity extends AppCompatActivity {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
-                backKeyPressedTime = System.currentTimeMillis();
-                Toast.makeText(this, "뒤로가기를 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
-                finish();
-            }
+            super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        ConnectivityManager manager = (ConnectivityManager) mcontext.getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo network = manager.getActiveNetworkInfo();
-        if (network == null || !network.isConnected() || network.getType() != ConnectivityManager.TYPE_WIFI) {
-            return;
-        }
-        new Thread(() -> {
-            new linkControl().sethtml(mcontext);
-        }).start();
     }
 }
